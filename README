@@ -1,1 +1,15 @@
 YUI Tutorial written using ReST/Sphinx.
+
+Instructions for setting up Sphinx in a virtualenv. Skip steps 1-3 if you are not using MacPorts.
+
+1. Install MacPorts
+2. sudo port install python26 py26-setuptools
+3. Edit your $PATH to include /opt/local/bin followed by /opt/local/Library/Frameworks/Python.framework/Versions/2.6/bin
+4. sudo easy_install -UZ pip
+5. sudo pip install virtualenv virtualenvwrapper
+6. virtualenv ~/docs
+7. cd docs
+8. source bin/activate
+9. pip install sphinx (note: no more sudo!
+10. mkdir yui_tutoral, cd, git init, pull yui_tutorial
+11. make html
