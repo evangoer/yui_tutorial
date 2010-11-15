@@ -1,0 +1,28 @@
+.. YUI Tutorial documentation master file, created by
+   sphinx-quickstart on Sat Nov 13 21:54:10 2010.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+****************
+The YUI Tutorial
+****************
+
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+
+   getting-started
+
+Welcome to the YUI Tutorial! The YUI (Yahoo! User Interface) library is a `BSD-licensed <http://developer.yahoo.com/yui/license.html>`_ `open-source <http://github.com/yui>`_ JavaScript and CSS library. It is built from the ground up to support `complex <http://mail.yahoo.com>`_ `web <https://landscape.canonical.com/>`_ `applications <http://duckduckgo.com/>`_, but it also is elegant and succinct enough to apply simple effects without getting in your way. You can easily build `rapid prototypes <http://en.wikipedia.org/wiki/Software_prototyping>`_ and `minimum viable products <http://www.startuplessonslearned.com/2009/03/minimum-viable-product.html>`_ with YUI, secure in the knowledge that if your app becomes wildly successful, the foundational library you've chosen won't buckle under the stress of growing your code base.
+
+Why YUI?
+========
+
+* **High performance.** YUI enables you to be *extremely* picky about what you load and when you load it. The YUI core is only 6.9K. From this lean core, you can dynamically load only the modules you need, and you can easily defer certain components to improve the perceived user experience.
+
+* **Safely sandboxed.** One of the great frustrations of JavaScript programming is the possibility of colliding with someone else's code in the global namespace. YUI's unique sandbox model makes this kind of error impossible.
+
+* **Fully supported.** YUI is being constantly developed and improved by a highly skilled team of full time contributors. It is `well documented <http://developer.yahoo.com/yui/3/api/>`_, has an `active user community <http://yuilibrary.com/forum/>`_, and is professionally tested and supported on a `wide range of browsers <http://developer.yahoo.com/yui/articles/gbs/>`_.
+
+Ready to try it out? Let's move on to :ref:`getting-started`.

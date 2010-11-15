@@ -1,0 +1,23 @@
+.. highlight:: guess
+
+.. _getting-started:
+
+******************************
+Getting Started with SimpleYUI
+******************************
+
+The easiest way to get started with YUI is to use *SimpleYUI*. The SimpleYUI file is a convenient package of YUI's most fundamental functionality: DOM tasks, event abstraction, UI effects, and AJAX. Later on in this tutorial, we'll move beyond SimpleYUI's limitations and explore how to use the YUI sandbox and how to do very fine-grained module loading. But for now, SimpleYUI is just fine for our purposes.
+
+All the exercises use a minimal but valid HTML5 skeleton file:
+
+.. literalinclude:: examples/skeleton.html
+	:linenos:
+
+For brevity, we will sometimes only show the code in the final ``<script>`` tag.
+
+DOM Manipulation
+================
+
+.. literalinclude:: examples/dom-highlight-one.html
+	:linenos:
+	:lines: 11
