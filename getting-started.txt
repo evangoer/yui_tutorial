@@ -29,13 +29,15 @@ The ``Y.one()`` method makes it easy to select and manipulate a single element o
 
 For example, we can use YUI to dynamically add a class to a ``<div>``, turning it red:
 
+:download:`Example 1 <examples/dom-highlight-one.html>`
+
 .. literalinclude:: examples/dom-highlight-one.html
 	:linenos:
 	
 Of course, we could have done this with plain CSS simply by applying the class in the first place. Let's try something a little more interesting:
 
+:download:`Example 2 <examples/dom-highlight-one-onclick.html>`
+
 .. literalinclude:: examples/dom-highlight-one-onclick.html
 	:linenos:
 	:lines: 11-13
-
-.. TODO need to add links to example files, tell Sphinx to pull examples/ into the build
