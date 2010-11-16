@@ -6,18 +6,29 @@
 Getting Started with SimpleYUI
 ******************************
 
-The easiest way to get started with YUI is to use *SimpleYUI*. The SimpleYUI file is a convenient package of YUI's most fundamental functionality: DOM tasks, event abstraction, UI effects, and AJAX. Later on in this tutorial, we'll move beyond SimpleYUI's limitations and explore how to use the YUI sandbox and how to do very fine-grained module loading. But for now, SimpleYUI is just fine for our purposes.
+The easiest way to get started with YUI is to use *SimpleYUI*. The SimpleYUI file is a convenient package of YUI's most fundamental functionality: DOM tasks, event abstraction, UI effects, and AJAX. 
 
-All the exercises use a minimal but valid HTML5 skeleton file:
+All examples in this tutorial are variations on a minimal but valid HTML5 document. For brevity, we will sometimes only display the relevant JavaScript code and leave out the markup and CSS. But in general, you can assume that our example code is running in a document that resembles:
 
 .. literalinclude:: examples/skeleton.html
 	:linenos:
 
-For brevity, we will sometimes only show the code in the final ``<script>`` tag.
+
+In this skeleton document, the first ``<script>`` element does two things:
+
+1. It pulls in the minified, gzipped SimpleYUI file from Yahoo's `CDN <http://en.wikipedia.org/wiki/Content_delivery_network>`_. While you can always download and store a local copy of YUI, using the CDN is faster and more convenient.
+
+2. It instantiates a global YUI object named ``Y`` for immediate use. You can access the entire YUI library through this object. 
+
+.. note:: 
+	Wait a second -- a global object? Weren't we just `bragging about YUI's fancy sandboxing <index.html>`_? It's true. We feel terribly guilty. Later in this tutorial, we'll move beyond SimpleYUI's limitations and explore YUI's more advanced features. But for simple apps and demonstrations, SimpleYUI is just fine.
 
 DOM Manipulation
 ================
 
+The ``Y.one()`` function makes it very easy to select a single element on the page. 
+
 .. literalinclude:: examples/dom-highlight-one.html
 	:linenos:
 	:lines: 11
+	
