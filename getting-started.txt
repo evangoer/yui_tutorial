@@ -13,7 +13,6 @@ All examples in this tutorial are variations on a minimal but valid HTML5 docume
 .. literalinclude:: examples/skeleton.html
 	:linenos:
 
-
 In this skeleton document, the first ``<script>`` element does two things:
 
 1. It pulls in the minified, gzipped SimpleYUI file from Yahoo's `CDN <http://en.wikipedia.org/wiki/Content_delivery_network>`_. While you can always download and store a local copy of YUI, using the CDN is faster and more convenient.
@@ -26,9 +25,17 @@ In this skeleton document, the first ``<script>`` element does two things:
 DOM Manipulation
 ================
 
-The ``Y.one()`` function makes it very easy to select a single element on the page. 
+The ``Y.one()`` method makes it easy to select and manipulate a single element on the page. ``Y.one()`` takes a CSS selector and returns a ``Node`` object. Once you have a ``Node``, it is easy to change its properties by calling additional methods. 
+
+For example, we can use YUI to dynamically add a class to a ``<div>``, turning it red:
 
 .. literalinclude:: examples/dom-highlight-one.html
 	:linenos:
-	:lines: 11
 	
+Of course, we could have done this with plain CSS simply by applying the class in the first place. Let's try something a little more interesting:
+
+.. literalinclude:: examples/dom-highlight-one-onclick.html
+	:linenos:
+	:lines: 11-13
+
+.. TODO need to add links to example files, tell Sphinx to pull examples/ into the build
