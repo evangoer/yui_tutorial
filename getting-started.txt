@@ -8,7 +8,7 @@ Getting Started with SimpleYUI
 
 The easiest way to get started with YUI is to use *SimpleYUI*. The SimpleYUI file is a convenient package of YUI's most fundamental functionality: DOM tasks, event abstraction, UI effects, and AJAX. 
 
-All examples in this tutorial are variations on a minimal but valid HTML5 document. For brevity, we will sometimes only display the relevant JavaScript code and leave out the markup and CSS. But in general, you can assume that our example code is running in a document that resembles:
+All examples in this tutorial are variations on a minimal but valid HTML5 document. For brevity, we will sometimes only display the relevant JavaScript code. In general, you can assume that any example code you see is running in a document that resembles:
 
 .. literalinclude:: examples/skeleton.html
 	:linenos:
@@ -25,19 +25,25 @@ In this skeleton document, the first ``<script>`` element does two things:
 DOM Manipulation
 ================
 
-The ``Y.one()`` method makes it easy to select and manipulate a single element on the page. ``Y.one()`` takes a CSS selector and returns a ``Node`` object. Once you have a ``Node``, it is easy to change its properties by calling additional methods. 
+The ``Y.one()`` method makes it easy to select and manipulate a single element on the page. ``Y.one()`` takes a CSS selector and returns a `Node <http://developer.yahoo.com/yui/3/api/Node.html>`_ object. Once you have a ``Node``, it is easy to change its properties by calling additional methods. 
 
-For example, we can use YUI to dynamically add a class to a ``<div>``, turning it red:
-
-:download:`Example 1 <examples/dom-highlight-one.html>`
+In :download:`Example 1 <examples/dom-highlight-one.html>`, we use YUI to dynamically add a class to a ``<div>``, turning it red.
 
 .. literalinclude:: examples/dom-highlight-one.html
 	:linenos:
 	
-Of course, we could have done this with plain CSS simply by applying the class in the first place. Let's try something a little more interesting:
+Y.one() selects the element with an ``id`` of ``demo`` and creates a ``Node`` object to represent it. We then call the `Node.addClass() <http://developer.yahoo.com/yui/3/api/Node.html#method_addClass>`_ method, which adds the ``.highlight`` class to the element. If we load the document with JavaScript enabled, the ``<div>`` is highlighted red.
 
-:download:`Example 2 <examples/dom-highlight-one-onclick.html>`
+Of course, we could have easily highlighted the ``<div>`` with CSS alone. Let's try something a little more interesting.
+
+In :download:`Example 2 <examples/dom-highlight-one-onclick.html>`, the ``<div>`` starts out plain. But as soon you click anywhere in the document, the ``<div>`` turns red.
 
 .. literalinclude:: examples/dom-highlight-one-onclick.html
 	:linenos:
 	:lines: 11-13
+
+This time, we call ``Y.one()`` twice. The first call, ``Y.one("document")``, creates a node representing the entire HTML document. We then attach an event to the document by calling the `Node.on() <http://developer.yahoo.com/yui/3/api/Node.html#method_on>`_ method. 
+
+We must supply ``Node.on()`` method with two arguments:
+
+* 
