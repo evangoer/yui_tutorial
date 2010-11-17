@@ -39,11 +39,24 @@ Of course, we could have easily highlighted the ``<div>`` with CSS alone. Let's 
 In :download:`Example 2 <examples/dom-highlight-one-onclick.html>`, the ``<div>`` starts out plain. But as soon you click anywhere in the document, the ``<div>`` turns red.
 
 .. literalinclude:: examples/dom-highlight-one-onclick.html
+	:language: javascript
 	:linenos:
 	:lines: 11-13
 
-This time, we call ``Y.one()`` twice. The first call, ``Y.one("document")``, creates a node representing the entire HTML document. We then attach an event to the document by calling the `Node.on() <http://developer.yahoo.com/yui/3/api/Node.html#method_on>`_ method. 
+This time, we call ``Y.one()`` twice. The first call, ``Y.one("document")``, creates a node representing the entire HTML document. We then attach an event to the document by calling the `on() <http://developer.yahoo.com/yui/3/api/EventTarget.html#method_on>`_ method. ``on()`` requires at least two arguments:
 
-We must supply ``Node.on()`` method with two arguments:
+* A string indicating the event to listen for (such as ``"click"`` or ``"hover"`` ).
+* A function to handle the event.
 
-* 
+In this case, we've supplied an anonymous (nameless) function to handle the event. Anonymous functions are common in JavaScript and YUI, but if you're coming to this tutorial from another language or framework, this idiom might look unfamiliar. If you wanted to rewrite this with a named function, the code would look like this:
+
+.. code-block:: javascript
+  :linenos:
+
+  var highlightDiv = function(e) {
+    Y.one("#demo").addClass("highlight");
+  };
+
+  Y.one("document").on("click", highlightDiv);
+
+However 
