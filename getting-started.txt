@@ -21,12 +21,12 @@ In this skeleton document, the first ``<script>`` element does two things:
 .. note:: 
 	Wait a second -- a global object? Weren't we just bragging about YUI's fancy sandboxing? It's true. We feel terribly guilty. Later in this tutorial, we'll move beyond SimpleYUI's limitations and explore YUI's more advanced features. But for simple apps and demonstrations, SimpleYUI is just fine.
 
-DOM Manipulation
-================
+Getting a Node
+==============
 
 The ``Y.one()`` method makes it easy to select and manipulate a single element on the page. ``Y.one()`` takes a CSS selector and returns a `Node <http://developer.yahoo.com/yui/3/api/Node.html>`_ object. Once you have a ``Node``, it is easy to change its properties by calling additional methods. 
 
-In :download:`Example 1 <examples/dom-highlight-one.html>`, we use YUI to dynamically add a class to a ``<div>``, turning it red.
+:download:`Example 1 <examples/dom-highlight-one.html>` uses YUI to dynamically add a class to a ``<div>``, turning it red.
 
 .. literalinclude:: examples/dom-highlight-one.html
 	:language: html
@@ -36,26 +36,67 @@ Y.one() selects the element with an ``id`` of ``demo`` and creates a ``Node`` ob
 
 Of course, we could have easily highlighted the ``<div>`` with CSS alone. Let's try something a little more interesting.
 
-In :download:`Example 2 <examples/dom-highlight-one-onclick.html>`, the ``<div>`` starts out plain. But as soon you click anywhere in the document, the ``<div>`` turns red.
+In :download:`Example 2 <examples/dom-highlight-one-onclick.html>`, the ``<div>`` starts out unstyled. But as soon you click anywhere in the document, the ``<div>`` turns red.
 
 .. literalinclude:: examples/dom-highlight-one-onclick.html
 	:linenos:
 	:lines: 11-13
 
-This time, we call ``Y.one()`` twice. The first call, ``Y.one("document")``, creates a node representing the entire HTML document. We then attach an event to the document by calling the `on() <http://developer.yahoo.com/yui/3/api/EventTarget.html#method_on>`_ method. ``on()`` requires at least two arguments:
+This time, we call ``Y.one()`` twice. The first call, ``Y.one("document")``, creates a node representing the entire HTML document. We then attach an event to the document by calling the `on() <http://developer.yahoo.com/yui/3/api/EventTarget.html#method_on>`_ method, which requires at least two arguments:
 
 * A string indicating the event to listen for (such as ``"click"`` or ``"hover"`` ).
-* A function to handle the event.
+* An event handler function to trigger when the event occurs.
 
-In this case, we've supplied an anonymous (nameless) function to handle the event. Anonymous functions are common in JavaScript and YUI, but if you're coming to this tutorial from another language or framework, this idiom might look unfamiliar. If you wanted to rewrite this with a named function, the code would look like this:
+Here, we've specified a click event to trigger for the entire document. If you click anywhere in the document, the event handler function triggers and does exactly what Example 1 did: create a ``Node`` object out of the ``demo`` div and add the ``.highlight`` class.
 
-.. code-block:: javascript
-  :linenos:
+.. note:: 
+    Example 2 uses an anonymous (nameless) function to handle the event. Anonymous functions are common in JavaScript, but if you're coming to this tutorial from another language, this idiom might look unfamiliar. Rewritten with a named function, the code would look like this:
 
-  var highlightDiv = function(e) {
-    Y.one("#demo").addClass("highlight");
-  };
+    .. code-block:: javascript
+      :linenos:
 
-  Y.one("document").on("click", highlightDiv);
+      var highlightDiv = function(e) {
+        Y.one("#demo").addClass("highlight");
+      };
 
-However 
+      Y.one("document").on("click", highlightDiv);
+
+    However, it's often more convenient to just use an anonymous function for event handlers.
+
+
+Getting Lots of Nodes
+=====================
+
+The ``Y.all()`` method is similar to ``Y.one()``, except that it selects and returns multiple nodes on the page. In :download:`Example 3 <examples/dom-highlight-all.html>`, we highlight every ``<li>`` element in the document:
+
+.. literalinclude:: examples/dom-highlight-all.html
+	:language: html
+	:linenos:
+	
+``Y.all()`` returns a `NodeList <http://developer.yahoo.com/yui/3/api/NodeList.html>`_, an object that contains multiple nodes. Conveniently, ``NodeList`` has many of the same methods as ``Node``. For example, ``Node.addClass()`` adds a class to a single node, while ``NodeList.addClass()`` adds a class to every node in the list.
+
+We can control which elements ``Y.all()`` selects by providing different CSS selectors. In :download:`Example 4 <examples/dom-highlight-bar.html>`, we highlight every ``<li>`` element with a class of ``bar``:
+
+.. literalinclude:: examples/dom-highlight-bar.html
+	:linenos:
+	:lines: 26
+
+We can also supply more complicated selectors. :download:`Example 5 <examples/dom-highlight-baz.html>` highlights every element with ``class="baz"`` that is also a descendant of ``class="foo"``:
+
+.. literalinclude:: examples/dom-highlight-baz.html
+	:linenos:
+	:lines: 26
+	
+Getting more restrictive, :download:`Example 6 <examples/dom-highlight-baz.html>` highlights every element with ``class="baz"`` that is also a *direct* descendant of ``class="foo"``:
+
+.. literalinclude:: examples/dom-highlight-baz-direct.html
+	:linenos:
+	:lines: 26
+	
+	
+.. TODO -- rethink this -- probably want one example with several anchors to click on, doing the highlighting.
+
+Changing Node Properties
+========================
+
+Once you have a node, you can alter its properties. 

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<title>Highlighting Every List Item</title>
+<style>
+.highlight { background: #f66; color: #fff; border: 1px solid black; }
+</style>
+
+<ul>
+  <li class="foo">Fruit</li>
+  <li class="foo">Vegetables
+    <ul>
+      <li class="baz">Corn</li>
+      <li class="baz">Beets</li>
+      <li>Cabbage</li>
+    </ul>
+  </li>
+  <li class="foo bar">Dairy
+    <ul class="baz">
+      <li><strong>Ice Cream!</strong> (delicious)</li>
+      <li>Cheese</li>
+    </ul>
+  </li>
+</ul>
+
+<script src="http://yui.yahooapis.com/3.2.0/build/simpleyui/simpleyui-min.js"></script>
+<script>
+Y.all("li").addClass("highlight");
+</script>
