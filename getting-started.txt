@@ -1,5 +1,3 @@
-.. highlight:: guess
-
 .. _getting-started:
 
 ******************************
@@ -11,6 +9,7 @@ The easiest way to get started with YUI is to use *SimpleYUI*. The SimpleYUI fil
 All examples in this tutorial are variations on a minimal but valid HTML5 document. For brevity, we will sometimes only display the relevant JavaScript code. In general, you can assume that any example code you see is running in a document that resembles:
 
 .. literalinclude:: examples/skeleton.html
+	:language: html
 	:linenos:
 
 In this skeleton document, the first ``<script>`` element does two things:
@@ -30,6 +29,7 @@ The ``Y.one()`` method makes it easy to select and manipulate a single element o
 In :download:`Example 1 <examples/dom-highlight-one.html>`, we use YUI to dynamically add a class to a ``<div>``, turning it red.
 
 .. literalinclude:: examples/dom-highlight-one.html
+	:language: html
 	:linenos:
 	
 Y.one() selects the element with an ``id`` of ``demo`` and creates a ``Node`` object to represent it. We then call the `Node.addClass() <http://developer.yahoo.com/yui/3/api/Node.html#method_addClass>`_ method, which adds the ``.highlight`` class to the element. If we load the document with JavaScript enabled, the ``<div>`` is highlighted red.
@@ -39,7 +39,6 @@ Of course, we could have easily highlighted the ``<div>`` with CSS alone. Let's 
 In :download:`Example 2 <examples/dom-highlight-one-onclick.html>`, the ``<div>`` starts out plain. But as soon you click anywhere in the document, the ``<div>`` turns red.
 
 .. literalinclude:: examples/dom-highlight-one-onclick.html
-	:language: javascript
 	:linenos:
 	:lines: 11-13
 
