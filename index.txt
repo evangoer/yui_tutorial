@@ -13,6 +13,9 @@ Contents:
    :maxdepth: 2
 
    getting-started
+   events
+   ajax
+   modules
 
 Welcome to the YUI Tutorial! The YUI (Yahoo! User Interface) library is a `BSD-licensed <http://developer.yahoo.com/yui/license.html>`_ `open-source <http://github.com/yui>`_ JavaScript and CSS library. It is built from the ground up to support `complex <http://mail.yahoo.com>`_ `web <https://landscape.canonical.com/>`_ `applications <http://duckduckgo.com/>`_, but it also is elegant and succinct enough to apply simple effects without getting in your way. You can easily build `rapid prototypes <http://en.wikipedia.org/wiki/Software_prototyping>`_ and `minimum viable products <http://www.startuplessonslearned.com/2009/03/minimum-viable-product.html>`_ with YUI, secure in the knowledge that if your app becomes wildly successful, the foundational library you've chosen won't buckle under the stress of growing your code base.
 

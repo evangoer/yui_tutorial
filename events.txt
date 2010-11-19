@@ -1,0 +1,20 @@
+******
+Events
+******
+
+.. TODO 
+	- node.on('click', handler);
+	- node.delegate('click', handler);
+	- Y.on('click', handler, '#someid');
+	
+	Consistent interface
+	Can delegeate events
+	Can subscribe ahead of DOM availability
+	
+	From Luke's slides
+		// override form behavior
+		node.on("submit", function(e) {
+			e.preventDefault();
+			this.addClass("submitted");  // 'this' is the node (as one might hope). Can set 'this' in the handler.
+		});
+		// can create synthetic events such as "outsideclick"  -- too advanced for tutorial?

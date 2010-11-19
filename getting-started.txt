@@ -20,7 +20,7 @@ In this skeleton document, the first ``<script>`` element does two things:
 2. It instantiates a global YUI object named ``Y`` for immediate use. You can access the entire YUI library through this object. 
 
 .. note:: 
-	Wait a second -- a global object? Weren't we just `bragging about YUI's fancy sandboxing <index.html>`_? It's true. We feel terribly guilty. Later in this tutorial, we'll move beyond SimpleYUI's limitations and explore YUI's more advanced features. But for simple apps and demonstrations, SimpleYUI is just fine.
+	Wait a second -- a global object? Weren't we just bragging about YUI's fancy sandboxing? It's true. We feel terribly guilty. Later in this tutorial, we'll move beyond SimpleYUI's limitations and explore YUI's more advanced features. But for simple apps and demonstrations, SimpleYUI is just fine.
 
 DOM Manipulation
 ================

@@ -1,0 +1,13 @@
+****
+AJAX
+****
+
+.. TODO 
+	Y.io(url, config)
+	new Y.DataSource.IO(config)
+	Y.jsonp(url, callback)
+	
+	XHR normalization
+	Cross Domain (XDR)
+	Asynchronous form submit
+	

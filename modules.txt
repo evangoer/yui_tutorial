@@ -1,0 +1,20 @@
+**********************
+Modules and Sandboxing
+**********************
+
+.. comments:
+	without module loading
+	- you have a large blocking script for core features (most other ajax libraries work like this)
+	- to add more features, you call multiple blocking scripts
+	- if you add your scripts to the page out of order, dependencies fail
+	- lots of wasted code in giant monolithic scripts
+	- "volatility in collaborative environments" -- ask Luke what he means, is this "no sandbox"?
+	
+	YUI 3 module loading
+	- one small script, yui-min.js
+	- call in everything else as needed with use()
+	- dependencies automatically resolved
+	- asynchronously comboloaded from CDN -- we make one, nonblocking HTTP request
+	- sandboxed code: one page, N applications, can't step on each other's toes
+	
+	After this point, we ditch SimpleYUI
