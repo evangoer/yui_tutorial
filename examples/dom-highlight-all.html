@@ -4,6 +4,14 @@
 .highlight { background: #f66; color: #fff; border: 1px solid black; }
 </style>
 
+<p>
+	<a id="first" href="http://prototypejs.org">.baz</a> |
+	<a id="second" href="http://jquery.com">li.foo</a> |
+	<a id="third" href="http://yuilibrary.com">foo baz</a> |
+	<a id="fourth" href="http://mootools.net">foo > baz</a> |
+	<a id="fifth" href="http://dojotoolkit.org">li strong</a>
+</p>
+
 <ul>
   <li class="foo">Fruit</li>
   <li class="foo">Vegetables
@@ -15,7 +23,7 @@
   </li>
   <li class="foo bar">Dairy
     <ul class="baz">
-      <li><strong>Ice Cream!</strong> (delicious)</li>
+      <li><strong>Ice Cream</strong> (delicious!)</li>
       <li>Cheese</li>
     </ul>
   </li>
@@ -23,5 +31,15 @@
 
 <script src="http://yui.yahooapis.com/3.2.0/build/simpleyui/simpleyui-min.js"></script>
 <script>
-Y.all("li").addClass("highlight");
+var highlight = function(e, selector) {
+  e.preventDefault();
+  Y.all("*").removeClass("highlight");
+  Y.all(selector).addClass("highlight");
+};
+
+Y.one("#first").on("click", highlight, this, ".baz");
+Y.one("#second").on("click", highlight, this, "li.foo");
+Y.one("#third").on("click", highlight, this, ".foo .baz");
+Y.one("#fourth").on("click", highlight, this, ".foo > .baz");
+Y.one("#fifth").on("click", highlight, this, "li strong");
 </script>
