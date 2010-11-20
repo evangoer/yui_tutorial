@@ -126,7 +126,7 @@ There are two possible solutions:
        highlight(e, ".baz");
      });
 
-   The subtle difference is this code *declares* an anonymous function, but does not actually *execute* it. This means that the function itself passes to YUI, which now has something valid to call when the event triggers. 
+   The key difference is this code *declares* an anonymous function, but does not actually *execute* it. YUI now has something valid to call when the event triggers. 
 
 2. Use the extended form of the ``on()`` method. We've seen ``on()`` working with just two parameters, but the full form is::
 
@@ -145,7 +145,7 @@ There are two possible solutions:
 
    which again, passes our ``highlight()`` function and the argument it needs on to YUI, to be executed later. 
 
-Either form will work. For aesthetic reasons, we'll pick option #2, on the grounds that we can declare our events more compactly::
+Either form will work. We'll pick option #2 because it lets us declare our events more compactly::
 
   Y.one("#first").on("click", highlight, this, ".baz");
   Y.one("#second").on("click", highlight, this, "li.foo");
@@ -160,6 +160,36 @@ Try clicking on the links in :download:`Example 3 <examples/dom-highlight-all.ht
 Changing Node Properties
 ========================
 
-Once you have a node, you can alter its properties. 
+Once you select a node using ``Y.one()`` or ``Y.all()``, you can alter its properties.
 
-.. TODO!
+Adding Content
+--------------
+
+Append content to a div::
+
+  Y.one('#demo').append('Additional content added to #demo.');
+
+
+Moving Elements
+---------------
+
+Move element on document click::
+
+  Y.one('document').on('click', function(e) {
+      Y.one('#demo').setXY([e.pageX, e.pageY]);
+    }
+  );
+
+
+Creating Transitions
+--------------------
+
+fade #demo, then remove it from the DOM::
+
+  Y.one('#demo').transition({
+    easing: 'ease-out',
+    duration: 2, // seconds
+    opacity: 0
+  }, function() {
+    this.remove();
+  });
