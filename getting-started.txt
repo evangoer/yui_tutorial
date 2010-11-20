@@ -21,6 +21,8 @@ In this skeleton document, the first ``<script>`` element does two things:
 .. note:: 
 	Wait a second -- a global object? Weren't we just bragging about YUI's fancy sandboxing? It's true. We feel terribly guilty. Later in this tutorial, we'll move beyond SimpleYUI's limitations and explore YUI's more advanced features. But for simple apps and demonstrations, SimpleYUI is just fine.
 
+.. _getting-a-node:
+
 Getting a Node
 ==============
 
@@ -63,40 +65,99 @@ Here, we've specified a click event to trigger for the entire document. If you c
 
     However, it's often more convenient to just use an anonymous function for event handlers.
 
-
 Getting Lots of Nodes
 =====================
 
-The ``Y.all()`` method is similar to ``Y.one()``, except that it selects and returns multiple nodes on the page. In :download:`Example 3 <examples/dom-highlight-all.html>`, we highlight every ``<li>`` element in the document:
+The ``Y.all()`` method is similar to ``Y.one()``, except that when you give it a CSS selector,  it selects and returns multiple nodes as a `NodeList <http://developer.yahoo.com/yui/3/api/NodeList.html>`_ object. For example, calling ``Y.all("p")`` would return a ``NodeList`` containing all paragraphs in the document.
+
+Conveniently, a number of ``NodeList`` methods are similar to ``Node`` methods. For example, we've already seen ``Node.addClass()`` in action. ``NodeList.addClass()`` does almost the same thing -- it adds a class to every node in the node list.
+
+Let's take a look at how ``Y.all()`` works with CSS selectors in more detail. 
+
+:download:`Example 3 <examples/dom-highlight-all.html>` provides a new HTML page with some interesting structure and CSS classes to select on. The page also includes some links for us to attach events.
 
 .. literalinclude:: examples/dom-highlight-all.html
 	:language: html
 	:linenos:
-	
-``Y.all()`` returns a `NodeList <http://developer.yahoo.com/yui/3/api/NodeList.html>`_, an object that contains multiple nodes. Conveniently, ``NodeList`` has many of the same methods as ``Node``. For example, ``Node.addClass()`` adds a class to a single node, while ``NodeList.addClass()`` adds a class to every node in the list.
+	:lines: 1-30
 
-We can control which elements ``Y.all()`` selects by providing different CSS selectors. In :download:`Example 4 <examples/dom-highlight-bar.html>`, we highlight every ``<li>`` element with a class of ``bar``:
+To this page, we add some JavaScript:
 
-.. literalinclude:: examples/dom-highlight-bar.html
+.. literalinclude:: examples/dom-highlight-all.html
 	:linenos:
-	:lines: 26
+	:lines: 33-43
 
-We can also supply more complicated selectors. :download:`Example 5 <examples/dom-highlight-baz.html>` highlights every element with ``class="baz"`` that is also a descendant of ``class="foo"``:
+Creating a highlight() function
+-------------------------------
 
-.. literalinclude:: examples/dom-highlight-baz.html
+The ``highlight()`` function is an event handler that visually highlights the elements that were selected. Into this function, YUI passes:
+
+* ``e`` -- an object representing event that triggered. We actually saw this parameter back in :ref:`getting-a-node`. Earlier, we just ignored this parameter. This time, we're going to do something with it.
+* ``selector`` -- a CSS selector, such as ``"li.foo"``. This selector represents the elements we want to highlight.
+
+.. literalinclude:: examples/dom-highlight-all.html
 	:linenos:
-	:lines: 26
-	
-Getting more restrictive, :download:`Example 6 <examples/dom-highlight-baz.html>` highlights every element with ``class="baz"`` that is also a *direct* descendant of ``class="foo"``:
+	:lines: 33-37
 
-.. literalinclude:: examples/dom-highlight-baz-direct.html
-	:linenos:
-	:lines: 26
-	
-	
-.. TODO -- rethink this -- probably want one example with several anchors to click on, doing the highlighting.
+The first line overrides the browser's default click behavior. Ordinarily, clicking on a link takes you to the link's location. Calling ``preventDefault()`` on the click event prevents this default behavior. To make the point absolutely clear, we've set the ``href`` of each link to point to the home pages of some of our favorite JavaScript libraries. Thanks to ``preventDefault()``, the ``href`` is irrelevant; clicking the links does actually not take us off the page.
+
+The second line gets *all* nodes on the page and then removes the ``highlight`` class from each node, resetting the page to its initial, un-highlighted state. This line is not particularly efficient -- getting all nodes on the page is expensive, and even worse, we have to pay that cost every time we call ``highlight()``. We could be more clever about how we do this refresh, but for demo purposes, this approach is acceptable.
+
+Finally, the third line does the highlighting work. ``Y.all()`` takes the CSS selector we passed in, selects the appropriate nodes and highlights them.
+
+Adding events
+-------------
+
+Now, all that's left is to attach some events to the links. Use ``Y.one()`` to grab the anchor node, use ``.on()`` to attach a click event with a ``highlight()`` handler, and... we're done, right? Something like this::
+
+  Y.one("#first").on("click", highlight(e, ".baz"));
+
+Unfortunately, this doesn't work. The problem is that we want to pass an event handler function into ``on()`` to be executed *later*, when the event triggers. But in the above code, ``highlight(e, ".baz")`` executes *now*, and so what we're really doing is::
+
+  Y.one("#first").on("click", returned-value-of-executing-highlight);
+
+Unless ``highlight()`` returns a function (which it doesn't), this will fail. The click event may fire, but we didn't give it a valid handler function to execute, so nothing will happen.
+
+There are two possible solutions:
+
+1. Pass in ``highlight()``, but wrapped in an anonymous function to defer execution:: 
+
+     Y.one("#first").on("click", function(e) {
+       highlight(e, ".baz");
+     });
+
+   The subtle difference is this code *declares* an anonymous function, but does not actually *execute* it. This means that the function itself passes to YUI, which now has something valid to call when the event triggers. 
+
+2. Use the extended form of the ``on()`` method. We've seen ``on()`` working with just two parameters, but the full form is::
+
+     on(type, fn, context, args*)
+   
+   where:
+
+     * ``type`` is the type of the event, such as "click".
+     * ``fn`` is the function to call to handle the event.
+     * ``context`` is the object where we are attaching the event. By default, the value of this parameter is the ``NodeList`` itself. We actually don't want to mess with this object, so we'll just explicitly set it to the special JavaScript object ``this``, which yields the same behavior. 
+     * ``args`` is one or more extra arguments to be passed into the handler function. Aha -- here is where we can supply our ``selector`` argument, or anything else extra that our handler function might need.
+
+   So for our purposes, we could call ``on()`` with four arguments::
+
+     Y.one("#first").on("click", highlight, this, ".baz");
+
+   which again, passes our ``highlight()`` function and the argument it needs on to YUI, to be executed later. 
+
+Either form will work. For aesthetic reasons, we'll pick option #2, on the grounds that we can declare our events more compactly::
+
+  Y.one("#first").on("click", highlight, this, ".baz");
+  Y.one("#second").on("click", highlight, this, "li.foo");
+  Y.one("#third").on("click", highlight, this, ".foo .baz");
+  Y.one("#fourth").on("click", highlight, this, ".foo > .baz");
+  Y.one("#fifth").on("click", highlight, this, "li strong");
+
+Try clicking on the links in :download:`Example 3 <examples/dom-highlight-all.html>` while viewing the source. Does it highlight the links that you expect?
 
 Changing Node Properties
 ========================
 
 Once you have a node, you can alter its properties. 
+
+.. TODO!
