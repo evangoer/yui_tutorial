@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<title>Appending an Element</title>
+<style>
+#demo {
+  width: 200px;
+  border: 1px solid black;
+  padding: 5px;
+  margin-left: 20px;
+  background: #ff9;
+}
+</style>
+
+<p>
+  <a href="#" id="append">Append Content</a> | 
+  <a href="#" id="replace">Set Content</a>
+</p>
+
+<ul id="demo"></ul>
+
+<script src="http://yui.yahooapis.com/3.2.0/build/simpleyui/simpleyui-min.js"></script>
+<script>
+Y.one("#append").on("click", function(e){
+  Y.one("#demo").append("<li>HELLOSKI!</li>");
+});
+
+Y.one("#replace").on("click", function(e) {
+  Y.one("#demo").setContent("<li>GOODBYE COMRADE</li>");
+});
+</script>

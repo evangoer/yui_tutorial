@@ -11,3 +11,15 @@ AJAX
 	Cross Domain (XDR)
 	Asynchronous form submit
 	
+	Ajax
+	SimpleYUI provides the IO module’s basic Ajax functionality:
+
+	// Make an HTTP request to 'get.php':
+	Y.io('get.php', {
+	    on: {
+	        complete: function (id, response) {
+	            var data = response.responseText; // Response data.
+	            // ... handle the response ...
+	        }
+	    }
+	});

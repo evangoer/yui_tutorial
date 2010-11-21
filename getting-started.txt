@@ -160,15 +160,18 @@ Try clicking on the links in :download:`Example 3 <examples/dom-highlight-all.ht
 Changing Node Properties
 ========================
 
-Once you select a node using ``Y.one()`` or ``Y.all()``, you can alter its properties.
+Once you select a node using ``Y.one()`` or ``Y.all()``, you can do a lot more than just add and remove classes. This section provides a taste of the full `Node API <http://developer.yahoo.com/yui/3/api/Node.html>`_.
 
-Adding Content
---------------
+Changing Content
+----------------
 
-Append content to a div::
+:download:`Example 2 <examples/dom-append.html>` demonstrates appending and replacing content:
 
-  Y.one('#demo').append('Additional content added to #demo.');
+.. literalinclude:: examples/dom-append.html
+	:language: html
+	:linenos:
 
+``Node.append()`` inserts the supplied string or element as the node's last child, while ``Node.setContent()`` replaces all of the node's children with 
 
 Moving Elements
 ---------------
