@@ -22,4 +22,5 @@ Events
 		// can create synthetic events such as "outsideclick"  -- too advanced for tutorial?
 		
 	Y.one('#demo').delegate('click', function(e) {/*handle click*/}, 'li');
-		
+	
+	Ryan Grove's reasons why he likes YUI3 events > other libraries:  DOM events, custom events, synthetic events, delegation, bubbling, plus consistent API and event facades.
