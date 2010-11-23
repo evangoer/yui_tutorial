@@ -165,16 +165,37 @@ Once you select a node using ``Y.one()`` or ``Y.all()``, you can do a lot more t
 Changing Content
 ----------------
 
-:download:`Example 2 <examples/dom-append.html>` demonstrates appending and replacing content:
+:download:`Example 4 <examples/dom-append.html>` demonstrates appending and replacing content:
 
 .. literalinclude:: examples/dom-append.html
 	:language: html
 	:linenos:
 
-``Node.append()`` inserts the supplied string or element as the node's last child, while ``Node.setContent()`` replaces all of the node's children with 
+``Node.append()`` inserts the supplied string or element as the node's last child, while ``Node.setContent()`` replaces all of the node's content with the new string or element. Both methods automatically convert strings of HTML markup (such as ``"<p>Some text</p>"``) to HTML before doing the insert.
 
-Moving Elements
----------------
+Getting and Setting DOM Attributes
+----------------------------------
+
+Under the covers, a ``Node`` object is a wrapper for a native DOM node object. If you are familiar with the DOM, you can use ``Node.get()`` and ``Node.set()`` to freely read and write DOM attributes such as ``parentNode`` and ``firstChild``. For example, in::
+
+  var node = Y.one("#foo");
+  var parent = node.get("parentNode");
+
+the ``parent`` variable holds ``#foo``'s parent node, as a YUI ``Node`` object.
+
+You can also use ``set`` to change the content of the attribute, by setting the ``innerText`` attribute. In fact, ::
+
+  Y.one("foo").set("innerHTML", "<li>GOODBYE COMRADE</li>");
+
+is equivalent to our earlier ::
+
+  Y.one("#demo").setContent("<li>GOODBYE COMRADE</li>");
+
+.. TODO: is a complete list of attributes documented? It's not just the DOM Node attributes, there are many more, some non-standard...? 
+
+Moving Nodes
+------------
+
 
 Move element on document click::
 
