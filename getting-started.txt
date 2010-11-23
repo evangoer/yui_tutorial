@@ -210,6 +210,11 @@ You can use ``setXY()`` along with some properties of the Event object to create
 Creating Transitions
 --------------------
 
+Defaults: 
+* Transition.DEFAULT_EASING = 'ease'; and see also http://developer.yahoo.com/yui/3/api/Easing.html for definitions of easing
+* Transition.DEFAULT_DURATION = 0.5;
+* Transition.DEFAULT_DELAY = 0;
+
 fade #demo, then remove it from the DOM::
 
   Y.one('#demo').transition({

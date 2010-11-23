@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<title>Basic Transition</title>
+<style>
+#demo, #demo2 {
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
+  padding: 5px;
+  background: #009;
+}
+</style>
+
+<div id="demo"></div>
+<div id="demo2"></div>
+
+<script src="http://yui.yahooapis.com/3.2.0/build/simpleyui/simpleyui-min.js"></script>
+<script>
+Y.one('#demo').transition({
+  easing: 'ease-in',
+  duration: 3,
+  opacity: 0
+}, function() {
+  this.remove();
+});
+
+Y.one('#demo2').transition({
+//  easing: 'ease-out',
+ // duration: 3,
+  opacity: 0
+}, function() {
+  this.remove();
+});
+</script>
