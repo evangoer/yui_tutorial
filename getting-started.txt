@@ -46,7 +46,7 @@ In :download:`Example 2 <examples/dom-highlight-one-onclick.html>`, the ``<div>`
 
 This time, we call ``Y.one()`` twice. The first call, ``Y.one("document")``, creates a node representing the entire HTML document. We then attach an event to the document by calling the `on() <http://developer.yahoo.com/yui/3/api/EventTarget.html#method_on>`_ method, which requires at least two arguments:
 
-* A string indicating the event to listen for (such as ``"click"`` or ``"hover"`` ).
+* A string indicating the event to listen for (such as ``"click"`` or ``"hover"``).
 * An event handler function to trigger when the event occurs.
 
 Here, we've specified a click event to trigger for the entire document. If you click anywhere in the document, the event handler function triggers and does exactly what Example 1 did: create a ``Node`` object out of the ``demo`` div and add the ``.highlight`` class.
@@ -86,6 +86,8 @@ To this page, we add some JavaScript:
 .. literalinclude:: examples/dom-highlight-all.html
 	:linenos:
 	:lines: 33-43
+
+.. _creating-highlight-function:
 
 Creating a highlight() function
 -------------------------------
@@ -196,14 +198,14 @@ is equivalent to our earlier ::
 Moving Nodes
 ------------
 
+You can use ``Node.setXY()`` to move a node to a new absolute location on the page. For example, to move an element 100 pixels to the right and 200 pixels down, as measured from the top left corner of the page::
 
-Move element on document click::
+  Y.one("demo").setXY([100, 200]);
 
-  Y.one('document').on('click', function(e) {
-      Y.one('#demo').setXY([e.pageX, e.pageY]);
-    }
-  );
+You can use ``setXY()`` along with some properties of the Event object to create some interesting effects with very little code. We've already seen useful methods like :ref:`preventDefault() <creating-highlight-function>`, but the Event object also carries information about the event itself, including ``e.pageX`` and ``e.pageY``. This means you can capture the click's X,Y coordinates anywhere on the page and use them to move a node around, as shown in :download:`Example 5 <examples/dom-follow-my-click.html>`.
 
+.. literalinclude:: examples/dom-follow-my-click.html
+	:lines: 17-19
 
 Creating Transitions
 --------------------
