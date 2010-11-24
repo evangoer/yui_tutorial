@@ -187,7 +187,7 @@ the ``parent`` variable holds ``#foo``'s parent node, as a YUI ``Node`` object.
 
 You can also use ``set`` to change the content of the attribute, by setting the ``innerText`` attribute. In fact, ::
 
-  Y.one("foo").set("innerHTML", "<li>GOODBYE COMRADE</li>");
+  Y.one("#foo").set("innerHTML", "<li>GOODBYE COMRADE</li>");
 
 is equivalent to our earlier ::
 
@@ -200,7 +200,7 @@ Moving Nodes
 
 You can use ``Node.setXY()`` to move a node to a new absolute location on the page. For example, to move an element 100 pixels to the right and 200 pixels down, as measured from the top left corner of the page::
 
-  Y.one("demo").setXY([100, 200]);
+  Y.one("#demo").setXY([100, 200]);
 
 You can use ``setXY()`` along with some properties of the Event object to create some interesting effects with very little code. We've already seen useful methods like :ref:`preventDefault() <creating-highlight-function>`, but the Event object also carries information about the event itself, including ``e.pageX`` and ``e.pageY``. This means you can capture the click's X,Y coordinates anywhere on the page and use them to move a node around, as shown in :download:`Example 5 <examples/dom-follow-my-click.html>`.
 
@@ -210,17 +210,43 @@ You can use ``setXY()`` along with some properties of the Event object to create
 Creating Transitions
 --------------------
 
-Defaults: 
-* Transition.DEFAULT_EASING = 'ease'; and see also http://developer.yahoo.com/yui/3/api/Easing.html for definitions of easing
-* Transition.DEFAULT_DURATION = 0.5;
-* Transition.DEFAULT_DELAY = 0;
+YUI has two modules that deal with animations: the `Animation <http://developer.yahoo.com/yui/3/anim/> API`_ for advanced animations, and the `Transition API <http://developer.yahoo.com/yui/3/transition/>`_ for implementing fades and other common transitions on nodes. The Transition API is simpler than the Animation API, but still flexible enough to create a wide variety of effects.
 
-fade #demo, then remove it from the DOM::
+To create a transition, you call ``Node.transition()``. The ``transition()`` method takes two parameters:
+
+* A configuration object describing how the transition should behave and the the CSS properties to transition to
+* An optional callback function to execute when the transition completes
+
+A simple fade transition looks like::
+
+  Y.one("#demo").transition({opacity:0});
+
+YUI transitions the node from its current CSS opacity to 0 (fully transparent). Aside from the endpoint state of opacity = 0, we did not specify any detail about how quickly and smoothly the transition should occur. If we want more control, we can provide more configuration information::
+
+  Y.one("#demo").transition({
+    duration: 2,
+    delay: 1,
+    easing: "ease-out",
+    opacity: 0
+  });
+
+We've changed the behavior of the fade as follows:
+
+* The transition's duration is two seconds. The YUI default is 0.5 seconds. 
+* The delay before starting the transition is 1 second. The YUI default is 0 seconds.
+* The easing algorithm used is ``ease-out``, which begins the transition quickly and then decelerates at the end. You can also specify other options such as ``ease-out``, which begins the transition slowly and accelerates at the end. The YUI default behavior is ``ease``. 
+
+.. TODO not sure what the default value of 'ease' does, exactly.
+
+Keep in mind that while this example fade changes the node's visual appearance, the node is still present in the DOM. To remove the node entirely after the fade completes, we can just add a callback function::
 
   Y.one('#demo').transition({
-    easing: 'ease-out',
-    duration: 2, // seconds
+    duration: 2,
+    delay: 1,
+    easing: "ease-out",
     opacity: 0
   }, function() {
     this.remove();
   });
+
+.. TODO example with multiple properties and separate durations & easings. 
