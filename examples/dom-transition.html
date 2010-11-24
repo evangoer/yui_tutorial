@@ -11,23 +11,26 @@
 </style>
 
 <div id="demo"></div>
-<div id="demo2"></div>
 
 <script src="http://yui.yahooapis.com/3.2.0/build/simpleyui/simpleyui-min.js"></script>
 <script>
-Y.one('#demo').transition({
-  easing: 'ease-in',
-  duration: 3,
-  opacity: 0
-}, function() {
-  this.remove();
-});
+Y.one("#demo").transition({
+  duration: 2,
+  easing: "ease-in",
 
-Y.one('#demo2').transition({
-//  easing: 'ease-out',
- // duration: 3,
-  opacity: 0
-}, function() {
-  this.remove();
+  height: {
+	duration: 1,
+	delay: 1,
+	easing: "ease-out",
+    value: "150px"
+  },
+
+  width: "300px",
+
+  backgroundColor: {
+    duration: 1,
+    delay: 2,
+    value: "#c00"
+  }
 });
 </script>
