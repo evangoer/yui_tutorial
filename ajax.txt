@@ -11,8 +11,15 @@ AJAX
 	Cross Domain (XDR)
 	Asynchronous form submit
 	
-	Ajax
+	Probably just want to cover io-base, io-form
+	
+	Need a PHP script they can download & run, to actually respond to requests?
+	Otherwise we get into XDR unpleasantness, they have to deploy io.swf themselves... 
+	Or: set up something where xdr native requests work? But would that also just be confusing?
+	
+	
 	SimpleYUI provides the IO module’s basic Ajax functionality:
+	Simple XMLHttpRequest 
 
 	// Make an HTTP request to 'get.php':
 	Y.io('get.php', {
@@ -23,3 +30,73 @@ AJAX
 	        }
 	    }
 	});
+	
+	
+	
+	The config object:
+	- can set HTTP method, data (as string), HTTP headers, ...
+	
+	var config = { 
+	    method: "post", 
+	    data: "dancing=1&location=ceiling", 
+	    on: { 
+	        success: initCelebration, 
+	        failure: initSulking 
+	    } 
+	}; 
+	Y.io("partay.php", config);
+	
+	
+	
+	Work with responseText 
+	function handleResponse(id, response) { 
+	    node.setContent(response.responseText); 
+	} 
+	var config = { 
+	    on: { 
+	        success: handleResponse, 
+	        failure: argh 
+	    } 
+	}; 
+	Y.io("service.php", config);
+	
+	
+	- JSON 
+	
+	Parse response JSON 
+	function handleResponse(id, response) { 
+	    var json = response.responseText, 
+	        data; 
+	    data = Y.JSON.parse(json); 
+	    // use the parsed object 
+	    node.append(data.content); 
+	} 
+	var config = { 
+	    on: { 
+	        success: handleResponse, 
+	        failure: argh 
+	    } 
+	}; 
+	Y.io("fetch.php", config); 
+	
+	JSON can throw exceptions
+	
+	
+	- Asynchronous form submission 
+	
+	form.on("submit", function (e) { 
+	    e.preventDefault(); 
+	    var config = { 
+	        method: "post", 
+	        form: { 
+	            id: this.get("id") 
+	        }, 
+	        on: { 
+	            success: handleResponse, 
+	            failure: argh 
+	        } 
+	    }; 
+	    Y.io(this.get("action"), config); 
+	});
+	
+	- JSONP and YQL 
