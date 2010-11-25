@@ -260,7 +260,7 @@ Beyond simply messing with the node's opacity, we can also construct transitions
     backgroundColor: "#c00"
   });
 
-For even more fine-grained control, we can set separate durations, delays, and easings on each CSS property. :download:`Example 6 <examples/dom-follow-my-click.html>` puts it all together:
+For even more fine-grained control, we can set separate durations, delays, and easings on each CSS property. :download:`Example 6 <examples/dom-transition.html>` puts it all together:
 
 .. literalinclude:: examples/dom-transition.html
 	:lines: 17-35
