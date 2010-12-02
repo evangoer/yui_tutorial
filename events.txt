@@ -4,46 +4,107 @@
 Events
 ******
 
+In the last chapter, ... [TODO Intro]
+
+.. what are events, exactly?
+.. what's cool about YUI events:
+     - Mr. Grove likes: DOM events, custom events, synthetic events, delegation, bubbling, plus consistent API and event facades.
+     - YUI training sez: consistent interface, can delegate events, can subscribe ahead of DOM availability
+
+Adding Events
+=============
+
+.. We've already seen subscribing to events with node.on()
+
+   var button = Y.one("#go"); 
+   function callback(e) { 
+     Y.log("Hello, World!"); 
+   } 
+   button.on("click", callback);
+
+.. or we can skip a step and just use Y.on()
+
+    function callback(e) { 
+      Y.log("Hello, World!"); 
+    } 
+    Y.on("click", callback, "#go");
+
+.. either way, don't use the onclick attribute -- don't embed behavior in the markup
+
+
+What is 'this'?
+---------------
+.. Show that the 'this' in the callback is the node 
+
+   function callback(e) { 
+   // this === commentInput 
+     Y.log( this.get("value") ); 
+   } 
+
+   var commentInput = Y.one("#comment"); 
+   commentInput.on("blur", callback);
+
+
+Removing Events
+===============
+.. How to remove events? Call detach. Talk about event categories
+   - can detach if you have the handle (either fooHandle.detach() or Y.detach(fooHandle))
+   - can detach all events of a certain category AND event type
+   - can purge all events from an element (optionally including type and recursing to children)
+
+
+Bubbling and Targets
+====================
+
+.. we've already seen preventDefault
+
+   Example from Luke's slides: override form behavior
+
+   node.on("submit", function(e) {
+     e.preventDefault();
+     this.addClass("submitted");  // 'this' is the node (as one might hope). Can set 'this' in the handler.
+   });
+
+.. show how stopPropagation works (and show halt)
+
+.. show difference between e.target & e.currentTarget
+
+   Implement the Asteroids bookmarklet in one line of code!  http://erkie.github.com/ (well, not really)
+
+   // FIXME
+   function byebye(e) { 
+     e.target.remove(); 
+   }
+   Y.all("*").on("click", byebye);
+
+
+Event Delegation
+================
+
+
 .. TODO 
-	- node.on('click', handler);
 	- node.delegate('click', handler);
-	- Y.on('click', handler, '#someid');
 	
-	Consistent interface
-	Can delegate events
-	Can subscribe ahead of DOM availability
-	
-	From Luke's slides
-		// override form behavior
-		node.on("submit", function(e) {
-			e.preventDefault();
-			this.addClass("submitted");  // 'this' is the node (as one might hope). Can set 'this' in the handler.
-		});
-		// can create synthetic events such as "outsideclick"  -- too advanced for tutorial?
-		
 	Y.one('#demo').delegate('click', function(e) {/*handle click*/}, 'li');
 	
-	Ryan Grove's reasons why he likes YUI3 events > other libraries:  DOM events, custom events, synthetic events, delegation, bubbling, plus consistent API and event facades.
+
+	Delegation
+	
+	- Single handler on a parent element listens for interactions on descendant elements
+	- Y.delegate("click", fn, id, optional-selector )
+	- or Y.one(node).delegate("click", fn, optional-selector)
+	
+	function byebye(e) { 
+	    this.remove(); 
+	} 
+	var targets = Y.one("#targets"); 
+	targets.delegate("click", byebye, "p");
 
 
-    From the YUI training slides:
+Special Events
+==============
 	
-	We've already seen subscribing to events with node.on()
-	
-	var button = Y.one("#go"); 
-	function callback(e) { 
-	    Y.log("Hello, World!"); 
-	} 
-	button.on("click", callback);
-	
-	or we can skip a step and just use Y.on()
-	
-	function callback(e) { 
-	    Y.log("Hello, World!"); 
-	} 
-	Y.on("click", callback, "#go");
-	
-	cover special events:	
+..	cover special events:	
 	
 	Y.on("available", nodeReady, "#image"); 
 	Y.on("contentready", childrenReady, "#container");
@@ -58,60 +119,23 @@ Events
 	- define a function to execute as soon as the DOM is in a usable state = structurally complete. Inserting information into the DOM before the DOM is complete can lead to crashes. DOM is ready before images are loaded.
 	
 	
-	Functions:
+Event Simulation
+================
 
-	Already seen preventDefault. Talk about e.halt() =  e.stopPropagation() and e.preventDefault(). Talk about bubbling.
-
-	Show that the 'this' in the callback is the node 
-	function callback(e) { 
-	    // this === commentInput 
-	    Y.log( this.get("value") ); 
-	} 
-	var commentInput = Y.one("#comment"); 
-	commentInput.on("blur", callback);
-	
-	
-	show difference between e.target and e.currentTarget
-		
-	Implement the Asteroids bookmarklet in one line of code!  http://erkie.github.com/ (well, not really)
-	function byebye(e) { 
-	    e.target.remove(); 
-	}
-	Y.one("#targets").on("click", byebye);
-	
-	
-	
-	From the Event page:
-	
-	How to remove events? Call detach. Talk about event categories
-	- can detach if you have the handle (either fooHandle.detach() or Y.detach(fooHandle))
-	- can detach all events of a certain category AND event type
-	- can purge all events from an element (optionally including type and recursing to children)
-	
-	Event Simulation
-	
+.. talk about why to do this. Testing?	
 	- node.simulate("mousemove" { clientX: 200, clientY: 200})
 	- node.simulate("click", { ctrlKey: true})
-	- talk about why you would want to do this. Testing? 
 	
-	Delegation
-	
-	- Single handler on a parent element listens for interactions on descendant elements
-	- Y.delegate("click", fn, id, optional-selector )
-	- or Y.one(node).delegate("click", fn, optional-selector)
-	
-	function byebye(e) { 
-	    this.remove(); 
-	} 
-	var targets = Y.one("#targets"); 
-	targets.delegate("click", byebye, "p");
-	
-	Touch events!
+
+Synthetic Events
+================
+
+..	Touch events
 	- touchstart, touchmove, touchend, touchcancel
 	- watch Mark Kawakami's talk for important tidbits
 	
 	
-	Synthetic events!
+	Synthetic events
 	- events that work across touch and mouse devices
 	- event-flick, event-move
 	- Can create synthetic events (worth mentioning, but seems rather advanced)
