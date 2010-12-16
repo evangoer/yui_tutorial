@@ -4,37 +4,52 @@
 Events
 ******
 
-In the last chapter, ... [TODO Intro]
+In the last chapter, :ref:`dom`, we had a few examples of events such as:
 
-.. what are events, exactly?
-.. what's cool about YUI events:
-     - Mr. Grove likes: DOM events, custom events, synthetic events, delegation, bubbling, plus consistent API and event facades.
-     - YUI training sez: consistent interface, can delegate events, can subscribe ahead of DOM availability
+.. code-block:: javascript
+   :linenos:
+
+   Y.one("document").on("click", function(e) {
+     Y.one("#demo").addClass("highlight");
+   });
+
+But this hardly does events justice, as they are critically important in JavaScript programming. As longtime JavaScript advocate `Peter-Paul Koch puts it <http://www.quirksmode.org/js/introevents.html>`_, 
+
+  "**Events are the beating heart of any JavaScript application.** ... Without events there are no scripts. Take a look at any web page with JavaScript in it: in nearly all cases there will be an event that triggers the script. The reason is very simple. JavaScript is meant to add interactivity to your pages: the user does something and the page reacts."
+
+However, events can be tricky to use effectively thanks to browser inconsistencies and bugs. Fortunately, YUI provides an event API that:
+
+* provides a consistent interface across all major browsers
+* supports event delegation, which enables your application to efficiently respond to document changes without creating huge numbers of event listeners
+* improves application responsiveness by enabling you to start listening ahead of DOM availability
+* provides synthetic events that can handle mouse events and touch events, all with the same code
 
 Adding Events
 =============
 
-.. We've already seen subscribing to events with node.on()
+YUI provides two main methods for adding events. We've already seen subscribing to events with ``Node``'s ``on()`` method::
 
-   var button = Y.one("#go"); 
-   function callback(e) { 
-     Y.log("Hello, World!"); 
-   } 
-   button.on("click", callback);
+  var link = Y.one("#demo");
+  link.on("click", handler);
 
-.. or we can skip a step and just use Y.on()
+Alternatively, you can skip selecting the node directly, and just call ``on()`` from the YUI global object::
 
-    function callback(e) { 
-      Y.log("Hello, World!"); 
-    } 
-    Y.on("click", callback, "#go");
+  Y.on("click", handler, "#demo");
 
-.. either way, don't use the onclick attribute -- don't embed behavior in the markup
+depending on whether you need to reuse the node or not. 
 
+In a lot of JavaScript code in the wild, you will see code that resembles::
+
+  <a href="..." onclick="handler();">...</a>
+
+Never do this. Inline events are bad practice in JavaScript, in much the same way that inline styles are bad practice in CSS. Web pages and web applications should always separate presentation (CSS) and behavior (JavaScript) from their markup. When using YUI, always apply your events with the ``on()`` method.
 
 What is 'this'?
----------------
-.. Show that the 'this' in the callback is the node 
+===============
+
+[TODO] 
+
+Show that the 'this' in the callback is the node::
 
    function callback(e) { 
    // this === commentInput 
@@ -45,19 +60,83 @@ What is 'this'?
    commentInput.on("blur", callback);
 
 
-A More Complicated Example 
-==========================
+Removing Events
+===============
+
+[TODO]
+
+How to remove events? Call detach. Talk about event categories
+
+   - can detach if you have the handle (either fooHandle.detach() or Y.detach(fooHandle))
+   - can detach all events of a certain category AND event type
+   - can purge all events from an element (optionally including type and recursing to children)
+
+
+Bubbling and Targets
+====================
+
+[TODO]
+
+show preventDefault -- this is also done in the big "Passing Arguments section"
+
+Example from Luke's slides: override form behavior::
+
+   node.on("submit", function(e) {
+     e.preventDefault();
+     this.addClass("submitted");  // 'this' is the node (as one might hope). Can set 'this' in the handler.
+   });
+
+show how stopPropagation works (and show halt)
+
+show difference between e.target & e.currentTarget
+
+for fun, implement the `Asteroids bookmarklet <http://erkie.github.com/>`_ in three lines of code! (well, not really) ::
+
+  Y.all("*").on("click", function(e) {
+    e.target.remove();
+  });
+
+
+Event Delegation
+================
+
+*Event delegation* enables a single event handler on a parent element to listen for interactions on descendant elements. You can use delegation to avoid the expensive process of having to create and assign lots of individual listeners.
+
+Delegation operates almost exactly like using the ``on()`` method. You can delegate from a node object::
+
+  var node = Y.one('#demo');
+  node.delegate('click', handler);
+
+or from the YUI object::
+
+  Y.delegate('#demo').delegate('click', handler);
+
+By default, ``delgate()`` applies the handler function to all descendant elements. However, you can supply a third optional selector argument to act as a filter. For example::
+
+  Y.delegate('#demo').delegate('click', handler, 'li');
+
+attaches the ``handler()`` function to all descendants of ``#demo`` that are also list items.
+
+
+[TODO create working example, maybe with class='fragile'. Also point out that 'this' is the element where the click happened, not the parent.]::
+
+  function destroyMe(e) {
+    this.remove()
+  }
+  Y.delegate('#demo').delegate('click', destroyMe, '.fragile');
+
+
+Passing Arguments to Event Handlers
+===================================
 
 .. TODO when getting lots of nodes, want to iterate
 	Also don't do event subscriptions on NodeList. It doesn't do what you expect with 'this'. 'this' should refer to the Node that the event was attached to. But: 1) we provide a delegate method, which overrides this. 2) NodeList.on("click" foo) -- inside that function 'this' is the NodeList, not the node! From inside the callback, you will always have access to the node via e.currentTarget. 'this' is the only reference to the NodeList itself. 3) Passing in a context override -- passing in 'this' is passing the global object. So pass in null instead... 
-	You can say: you can use any CSS3 selector. Go for it. 
-	Just talk about subscribe to a click event, ...
 
-.. TODO fix title and intro
+[TODO fix intro]
 
 Let's take a look at how ``Y.all()`` works with CSS selectors in more detail. 
 
-:download:`Example 3 <examples/events-highlight-all.html>` provides a new HTML page with some interesting structure and CSS classes to select on. The page also includes some links for us to attach events.
+:download:`Example 2 <examples/events-highlight-all.html>` provides a new HTML page with some interesting structure and CSS classes to select on. The page also includes some links for us to attach events.
 
 .. literalinclude:: examples/events-highlight-all.html
 	:language: html
@@ -84,7 +163,7 @@ The ``highlight()`` function is an event handler that visually highlights the el
 	:linenos:
 	:lines: 33-37
 
-The first line overrides the browser's default click behavior. Ordinarily, clicking on a link takes you to the link's location. Calling ``preventDefault()`` on the click event prevents this default behavior. To make what we're doing absolutely clear, the ``href`` of each link points to the home pages of some of our favorite JavaScript libraries. Thanks to ``preventDefault()``, the value of the ``href`` is irrelevant; clicking the links does not actually take us off the page. We'll see more useful event methods later on in :ref:`changing-node-properties` and again in :ref:`events`.
+The first line overrides the browser's default click behavior. Ordinarily, clicking on a link takes you to the link's location. Calling ``preventDefault()`` on the click event prevents this default behavior. To make what we're doing absolutely clear, the ``href`` of each link points to the home pages of some of our favorite JavaScript libraries. Thanks to ``preventDefault()``, the value of the ``href`` is irrelevant; clicking the links does not actually take us off the page. We'll see more useful event methods later on in :ref:`changing-node-properties` and again in :ref:`events`. [TODO might be able to shorten this paragraph since we're going to talk about preventDefault earlier]
 
 The second line selects all nodes with a class of ``highlight`` on the page and then removes the ``highlight`` class from each node. This resets the page to its initial, un-highlighted state.
 
@@ -121,7 +200,7 @@ There are two possible solutions:
 
      * ``type`` is the type of the event, such as "click".
      * ``fn`` is the function to call to handle the event.
-     * ``context`` is the object where we are attaching the event. By default, the value of this parameter is the ``NodeList`` itself. We actually don't want to mess with this object, so we'll just explicitly set it to the special JavaScript object ``this``, which yields the same behavior. 
+     * ``context`` is the object where we are attaching the event. By default, the value of this parameter is the ``NodeList`` itself. We actually don't want to mess with this object, so we'll just explicitly set it to ``null``. 
      * ``args`` is one or more extra arguments to be passed into the handler function. Aha -- here is where we can supply our ``selector`` argument, or anything else extra that our handler function might need.
 
    So for our purposes, we could call ``on()`` with four arguments::
@@ -130,115 +209,75 @@ There are two possible solutions:
 
    which again, passes our ``highlight()`` function and the argument it needs on to YUI, to be executed later. 
 
-.. TODO Could talk about Y.bind() instead -- a more generic function for binding. It's possible to create DOM events in YUI3 that you subscribe to with a different signature. Touch events, on a mobile device -- we have an event that covers both the touch & mouse event. If you want to subscribe to this generic event, in order to guarantee the arguments & contents are set properly, use Y.bind() is safer. (Though not quite as fast.) Read up on bind(). 
+[TODO Could talk about Y.bind() instead -- a more generic function for binding. It's possible to create DOM events in YUI3 that you subscribe to with a different signature. Touch events, on a mobile device -- we have an event that covers both the touch & mouse event. If you want to subscribe to this generic event, in order to guarantee the arguments & contents are set properly, use Y.bind() is safer. (Though not quite as fast.) Read up on bind().]
 
 Either form will work. We'll pick option #2 because it lets us declare our events more compactly::
 
-  Y.one("#first").on("click", highlight, this, ".baz");
-  Y.one("#second").on("click", highlight, this, "li.foo");
-  Y.one("#third").on("click", highlight, this, ".foo .baz");
-  Y.one("#fourth").on("click", highlight, this, ".foo > .baz");
-  Y.one("#fifth").on("click", highlight, this, "li strong");
+  Y.one("#first").on("click", highlight, null, ".baz");
+  Y.one("#second").on("click", highlight, null, "li.foo");
+  Y.one("#third").on("click", highlight, null, ".foo .baz");
+  Y.one("#fourth").on("click", highlight, null, ".foo > .baz");
+  Y.one("#fifth").on("click", highlight, null, "li strong");
 
 Try clicking on the links in :download:`Example 3 <examples/events-highlight-all.html>` while viewing the source. Does it highlight the links that you expect?
 
 
-Removing Events
-===============
-.. How to remove events? Call detach. Talk about event categories
-   - can detach if you have the handle (either fooHandle.detach() or Y.detach(fooHandle))
-   - can detach all events of a certain category AND event type
-   - can purge all events from an element (optionally including type and recursing to children)
+Super Cool Extra Events
+=======================
 
+[TODO need actual title]
 
-Bubbling and Targets
-====================
-
-.. we've already seen preventDefault
-
-   Example from Luke's slides: override form behavior
-
-   node.on("submit", function(e) {
-     e.preventDefault();
-     this.addClass("submitted");  // 'this' is the node (as one might hope). Can set 'this' in the handler.
-   });
-
-.. show how stopPropagation works (and show halt)
-
-.. show difference between e.target & e.currentTarget
-
-   Implement the Asteroids bookmarklet in one line of code!  http://erkie.github.com/ (well, not really)
-
-   // FIXME
-   function byebye(e) { 
-     e.target.remove(); 
-   }
-   Y.all("*").on("click", byebye);
-
-
-Event Delegation
-================
-
-
-.. TODO 
-	- node.delegate('click', handler);
-	
-	Y.one('#demo').delegate('click', function(e) {/*handle click*/}, 'li');
-	
-
-	Delegation
-	
-	- Single handler on a parent element listens for interactions on descendant elements
-	- Y.delegate("click", fn, id, optional-selector )
-	- or Y.one(node).delegate("click", fn, optional-selector)
-	
-	function byebye(e) { 
-	    this.remove(); 
-	} 
-	var targets = Y.one("#targets"); 
-	targets.delegate("click", byebye, "p");
-
+[TODO intro text]
 
 Special Events
-==============
+--------------
+
+[TODO]
+
+goal: assist progressive enhancement, add behavior only when the element is available in the DOM
+
+Y.on("available", nodeReady, "#image"); 
+
+- available: define a function to execute as soon as element is detected in the DOM. Don't use for elements that *might* be in the document eventually, just for elements that are in the process of loading.
+
+Y.on("contentready", childrenReady, "#container");
 	
-..	cover special events:	
-	
-	Y.on("available", nodeReady, "#image"); 
-	Y.on("contentready", childrenReady, "#container");
-	
-	- goal: assist progressive enhancement, add behavior only when the element is available in the DOM
-	- available: define a function to execute as soon as element is detected in the DOM. Don't use for elements that *might* be in the document eventually, just for elements that are in the process of loading.
 	- contentready: same as available, except that it waits for the target element and its next sibling.
 	
 	
-	Y.on("domready", domReady); 
+Y.on("domready", domReady); 
 	
 	- define a function to execute as soon as the DOM is in a usable state = structurally complete. Inserting information into the DOM before the DOM is complete can lead to crashes. DOM is ready before images are loaded.
-	
-	
-Event Simulation
-================
 
-.. talk about why to do this. Testing?	
-	- node.simulate("mousemove" { clientX: 200, clientY: 200})
-	- node.simulate("click", { ctrlKey: true})
-	
+Touch Events
+------------
 
-Synthetic Events
-================
+[TODO]
 
-..	Touch events
 	- touchstart, touchmove, touchend, touchcancel
 	- watch Mark Kawakami's talk for important tidbits
 	
 	
-	Synthetic events
+Synthetic events
+----------------
+
 	- events that work across touch and mouse devices
 	- event-flick, event-move
-	- Can create synthetic events (worth mentioning, but seems rather advanced)
+	- Can create your own synthetic events (worth mentioning, but seems rather advanced)
 	
 	
-	Custom events
+Custom events
+-------------
+
 	- perhaps worth mentioning, probably too advanced
+
+Event Simulation
+================
+
+[TODO]
+
+talk about why to do this. Testing?	
+
+	- node.simulate("mousemove" { clientX: 200, clientY: 200})
+	- node.simulate("click", { ctrlKey: true})
 	

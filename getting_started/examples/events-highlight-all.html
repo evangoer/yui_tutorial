@@ -36,9 +36,9 @@ var highlight = function(e, selector) {
   Y.all(selector).addClass("highlight");
 };
 
-Y.one("#first").on("click", highlight, this, ".baz");
-Y.one("#second").on("click", highlight, this, "li.foo");
-Y.one("#third").on("click", highlight, this, ".foo .baz");
-Y.one("#fourth").on("click", highlight, this, ".foo > .baz");
-Y.one("#fifth").on("click", highlight, this, "li strong");
+Y.one("#first").on("click", highlight, null, ".baz");
+Y.one("#second").on("click", highlight, null, "li.foo");
+Y.one("#third").on("click", highlight, null, ".foo .baz");
+Y.one("#fourth").on("click", highlight, null, ".foo > .baz");
+Y.one("#fifth").on("click", highlight, null, "li strong");
 </script>
