@@ -1,3 +1,13 @@
 *******
 Widgets
 *******
+
+* Config for widgets works the same, similar API
+* You can get and set attributes from the config
+* Widgets can throw custom events, which you can use just like other events
+* You must render a widget
+
+Our widgets:
+
+* TabView
+* AutoComplete

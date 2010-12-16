@@ -1,6 +1,13 @@
-**********************
-Modules and Sandboxing
-**********************
+*******
+Modules
+*******
+
+* Order of dependencies resolved
+* Dependencies loaded automatically
+* Stuff is loaded async
+* YUI(config).use('node', function(Y)) ... is complicated -- introduce it?
+* Y.use('node', function() {});... less complicated
+
 
 .. comments:
 	without module loading
@@ -16,5 +23,7 @@ Modules and Sandboxing
 	- dependencies automatically resolved
 	- asynchronously comboloaded from CDN -- we make one, nonblocking HTTP request
 	- sandboxed code: one page, N applications, can't step on each other's toes
+		- just include this as an informational note
+		- not as important to anyone who isn't Y! scale
 	
 	After this point, we ditch SimpleYUI

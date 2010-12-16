@@ -2,6 +2,20 @@
 AJAX
 ****
 
+.. TODO key topics:
+	- Y.io samedomain
+		- http methods: get and post
+		- mention offhand that it supports crossdomain
+		- mention we support file uploads, timeouts, failure testing, ... 
+		- primarily useful for XHR and form submission
+		- for other server IO there's Y.Get, JSOP, YQL, DataSource
+	- Y.io for XHR
+	- JSONP
+	- YQL ?  
+	- Parsing JSON
+	- Async form submission
+
+
 .. TODO 
 	Y.io(url, config)
 	new Y.DataSource.IO(config)
@@ -14,8 +28,7 @@ AJAX
 	Probably just want to cover io-base, io-form
 	
 	Need a PHP script they can download & run, to actually respond to requests?
-	Otherwise we get into XDR unpleasantness, they have to deploy io.swf themselves... 
-	Or: set up something where xdr native requests work? But would that also just be confusing?
+	PHP will be hosted on yuilibrary, so that's good...
 	
 	
 	SimpleYUI provides the IO module’s basic Ajax functionality:

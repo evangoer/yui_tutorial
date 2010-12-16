@@ -1,3 +1,20 @@
 **********
 Animations
 **********
+
+Start with Transitions
+
+various different config for Transitions
+
+Height, Width, Opacity, bgcolor, 
+
+Duration
+
+End event callback
+
+Easing -- works differently from Anim. Fixed names defined by the spec. ease-in, ease-out.
+
+
+Anim -- if you need a different easing equation, an anim that falls outside of ease-in and ease-out
+- you can get more easing equations
+

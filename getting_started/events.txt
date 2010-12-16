@@ -4,6 +4,24 @@
 Events
 ******
 
+.. TODO new structure
+	Intro text
+	Adding Events
+		the basics
+		subscribing to ondomready, etc. 
+			these are synthetic events (link)
+	Executing Events
+		simple destroy
+		giant example with adding classes
+		bubbling, halt, stoppropagation
+		this + targets
+			more asteroids
+			add transitions in anim section
+	Removing Events
+	Custom Events
+		pick a widget -- you can do all the same things with custom events that you can do with ordinary events
+
+
 In the last chapter, :ref:`dom`, we had a few examples of events such as:
 
 .. code-block:: javascript
@@ -22,7 +40,7 @@ However, events can be tricky to use effectively thanks to browser inconsistenci
 * provides a consistent interface across all major browsers
 * supports event delegation, which enables your application to efficiently respond to document changes without creating huge numbers of event listeners
 * improves application responsiveness by enabling you to start listening ahead of DOM availability
-* provides synthetic events that can handle mouse events and touch events, all with the same code
+* provides synthetic events that can simulate new DOM events, such as "tripleclick", "hover", or "clickoutside" 
 
 Adding Events
 =============
@@ -44,10 +62,29 @@ In a lot of JavaScript code in the wild, you will see code that resembles::
 
 Never do this. Inline events are bad practice in JavaScript, in much the same way that inline styles are bad practice in CSS. Web pages and web applications should always separate presentation (CSS) and behavior (JavaScript) from their markup. When using YUI, always apply your events with the ``on()`` method.
 
+Here Be A Section about Event Execution
+=======================================
+
+this, currentTarget, bubbling, ...?
+
+
+Triggering Events
+=================
+
+
+
+
 What is 'this'?
 ===============
 
 [TODO] 
+
+.. event programmers should be concerned with 'this'. e.target -- the most specific thing that received the event (the span inside the a)  and e.currentTarget -- where it was subscribed from (less complex)
+
+   YUI 3 defaults 'this' to be the node instance you subscribed from. Y.one(blah) -- this = blah
+
+   More detail about setting 'this' and config options
+
 
 Show that the 'this' in the callback is the node::
 
@@ -59,6 +96,8 @@ Show that the 'this' in the callback is the node::
    var commentInput = Y.one("#comment"); 
    commentInput.on("blur", callback);
 
+
+.. TODO see lucassmith.name/pub/this.html
 
 Removing Events
 ===============
@@ -76,6 +115,12 @@ Bubbling and Targets
 ====================
 
 [TODO]
+
+.. here is the node you subscribe from, here are some common properties
+   for a deeper discussion about how bubbling works, how this is set, 
+   goto my fancy 'this + targets' section
+
+   pry out the targets discussion and merge with 'this'
 
 show preventDefault -- this is also done in the big "Passing Arguments section"
 
@@ -180,6 +225,9 @@ Unfortunately, this doesn't work. The problem is that we want to pass an event h
 
   Y.one("#first").on("click", returned-value-of-executing-highlight);
 
+
+.. TODO -- move this stuff out and highlight it -- people trip up over this alot
+
 Unless ``highlight()`` returns a function (which it doesn't), this will fail. The click event may fire, but we didn't give it a valid handler function to execute, so nothing will happen.
 
 There are two possible solutions:
@@ -222,8 +270,8 @@ Either form will work. We'll pick option #2 because it lets us declare our event
 Try clicking on the links in :download:`Example 3 <examples/events-highlight-all.html>` while viewing the source. Does it highlight the links that you expect?
 
 
-Super Cool Extra Events
-=======================
+Events Beyond the DOM
+=====================
 
 [TODO need actual title]
 
@@ -254,6 +302,8 @@ Touch Events
 
 [TODO]
 
+The importance of mobile development
+
 	- touchstart, touchmove, touchend, touchcancel
 	- watch Mark Kawakami's talk for important tidbits
 	
@@ -277,6 +327,14 @@ Event Simulation
 [TODO]
 
 talk about why to do this. Testing?	
+
+A lot of people use this to execute code. That's a bad pattern. Events are how your user interacts with your app. Simulating means you're pretending to be the user. Call the function, don't simulate the event that calls the function.
+
+People will often hook up a click subscriber, and now I want it to execute. Don't simulate the click, call the function!
+
+Primary use case is in testing the user interface. If the user clicks here, X should happen.
+
+Other use case is in a synthetic event situation or feature testing. Behavioral forking -- you wire up a synth event to subscribe to an event which then it could simulate the firing of that event in a particular environment. If you're creating an interactive UI, can simulate user events for the sake of testing. Don't drive your application with simulates. 
 
 	- node.simulate("mousemove" { clientX: 200, clientY: 200})
 	- node.simulate("click", { ctrlKey: true})
