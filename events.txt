@@ -45,6 +45,68 @@ What is 'this'?
    commentInput.on("blur", callback);
 
 
+Adding events
+-------------
+
+.. TODO when getting lots of nodes, want to iterate
+	Step 1, Y.all
+	Step 2, Y.each. And do an addclass
+	Step 3, NodeList mirrors the Node methods
+	Below is an advanced example. Move to the Events chapter
+	Also don't do event subscriptions on NodeList. It doesn't do what you expect with 'this'. 'this' should refer to the Node that the event was attached to. But: 1) we provide a delegate method, which overrides this. 2) NodeList.on("click" foo) -- inside that function 'this' is the NodeList, not the node! From inside the callback, you will always have access to the node via e.currentTarget. 'this' is the only reference to the NodeList itself. 3) Passing in a context override -- passing in 'this' is passing the global object. So pass in null instead... 
+	You can say: you can use any CSS3 selector. Go for it. 
+	Just talk about subscribe to a click event, ...
+
+Now, all that's left is to attach some events to the links. Use ``Y.one()`` to grab the anchor node, use ``.on()`` to attach a click event with a ``highlight()`` handler, and... we're done, right? Something like this::
+
+  Y.one("#first").on("click", highlight(e, ".baz"));
+
+Unfortunately, this doesn't work. The problem is that we want to pass an event handler function into ``on()`` to be executed *later*, when the event triggers. But in the above code, ``highlight(e, ".baz")`` executes *now*, and so what we're really doing is::
+
+  Y.one("#first").on("click", returned-value-of-executing-highlight);
+
+Unless ``highlight()`` returns a function (which it doesn't), this will fail. The click event may fire, but we didn't give it a valid handler function to execute, so nothing will happen.
+
+There are two possible solutions:
+
+1. Pass in ``highlight()``, but wrapped in an anonymous function to defer execution:: 
+
+     Y.one("#first").on("click", function(e) {
+       highlight(e, ".baz");
+     });
+
+   The key difference is this code *declares* an anonymous function, but does not actually *execute* it. YUI now has something valid to call when the event triggers. 
+
+2. Use the extended form of the ``on()`` method. We've seen ``on()`` working with just two parameters, but the full form is::
+
+     on(type, fn, context, args*)
+
+   where:
+
+     * ``type`` is the type of the event, such as "click".
+     * ``fn`` is the function to call to handle the event.
+     * ``context`` is the object where we are attaching the event. By default, the value of this parameter is the ``NodeList`` itself. We actually don't want to mess with this object, so we'll just explicitly set it to the special JavaScript object ``this``, which yields the same behavior. 
+     * ``args`` is one or more extra arguments to be passed into the handler function. Aha -- here is where we can supply our ``selector`` argument, or anything else extra that our handler function might need.
+
+   So for our purposes, we could call ``on()`` with four arguments::
+
+     Y.one("#first").on("click", highlight, this, ".baz");
+
+   which again, passes our ``highlight()`` function and the argument it needs on to YUI, to be executed later. 
+
+.. TODO Could talk about Y.bind() instead -- a more generic function for binding. It's possible to create DOM events in YUI3 that you subscribe to with a different signature. Touch events, on a mobile device -- we have an event that covers both the touch & mouse event. If you want to subscribe to this generic event, in order to guarantee the arguments & contents are set properly, use Y.bind() is safer. (Though not quite as fast.) Read up on bind(). 
+
+Either form will work. We'll pick option #2 because it lets us declare our events more compactly::
+
+  Y.one("#first").on("click", highlight, this, ".baz");
+  Y.one("#second").on("click", highlight, this, "li.foo");
+  Y.one("#third").on("click", highlight, this, ".foo .baz");
+  Y.one("#fourth").on("click", highlight, this, ".foo > .baz");
+  Y.one("#fifth").on("click", highlight, this, "li strong");
+
+Try clicking on the links in :download:`Example 3 <examples/dom-highlight-all.html>` while viewing the source. Does it highlight the links that you expect?
+
+
 Removing Events
 ===============
 .. How to remove events? Call detach. Talk about event categories

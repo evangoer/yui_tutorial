@@ -18,8 +18,8 @@ In this skeleton document, the first ``<script>`` element does two things:
 
 2. It instantiates a global YUI object named ``Y`` for immediate use. You can access the entire YUI library through this object. 
 
-.. note:: 
-	Wait a second -- a global object? Weren't we just bragging about YUI's fancy sandboxing? It's true. We feel terribly guilty. Later in this tutorial, we'll move beyond SimpleYUI's limitations and explore YUI's more advanced features. But for simple apps and demonstrations, SimpleYUI is just fine.
+.. note
+	Production-quality YUI applications generally avoid using SimpleYUI. Instead, developers take advantage of YUI's powerful modularization patterns to load only the code they need into safe, isolated sandboxes. Later in this tutorial, we'll move beyond SimpleYUI's limitations and explore these more advanced features. But for simple apps and demonstrations, SimpleYUI is just fine.
 
 .. _getting-a-node:
 
@@ -34,7 +34,7 @@ The ``Y.one()`` method makes it easy to select and manipulate a single element o
 	:language: html
 	:linenos:
 	
-Y.one() selects the element with an ``id`` of ``demo`` and creates a ``Node`` object to represent it. We then call the `Node.addClass() <http://developer.yahoo.com/yui/3/api/Node.html#method_addClass>`_ method, which adds the ``.highlight`` class to the element. If we load the document with JavaScript enabled, the ``<div>`` is highlighted red.
+Y.one() selects the element with an ``id`` of ``demo`` and creates a ``Node`` object to represent it. We then call the `addClass() <http://developer.yahoo.com/yui/3/api/Node.html#method_addClass>`_ method, which adds the ``.highlight`` class to the element. If we load the document with JavaScript enabled, the ``<div>`` is highlighted red.
 
 Of course, we could have easily highlighted the ``<div>`` with CSS alone. Let's try something a little more interesting.
 
@@ -42,35 +42,31 @@ In :download:`Example 2 <examples/dom-highlight-one-onclick.html>`, the ``<div>`
 
 .. literalinclude:: examples/dom-highlight-one-onclick.html
 	:linenos:
-	:lines: 11-13
+	:lines: 11-15
 
-This time, we call ``Y.one()`` twice. The first call, ``Y.one("document")``, creates a node representing the entire HTML document. We then attach an event to the document by calling the `on() <http://developer.yahoo.com/yui/3/api/EventTarget.html#method_on>`_ method, which requires at least two arguments:
+This time, we call ``Y.one()`` twice. The first call is the same as before: it selects the element with an ``id`` of ``demo``, so that we can add the ``.highlight`` class. We've wrapped this in a function named ``highlightDiv``. We then attach an event to the document by calling the `on() <http://developer.yahoo.com/yui/3/api/EventTarget.html#method_on>`_ method, which requires at least two arguments:
 
-* A string indicating the event to listen for (such as ``"click"`` or ``"hover"``).
+* A string indicating the event to listen for (such as ``"click"`` or ``"mouseover"``).
 * An event handler function to trigger when the event occurs.
 
-Here, we've specified a click event to trigger for the entire document. If you click anywhere in the document, the event handler function triggers and does exactly what Example 1 did: create a ``Node`` object out of the ``demo`` div and add the ``.highlight`` class.
+Here, we've assigned ``highlightDiv`` to be a click event that will trigger for the entire document. If you click anywhere in the document, the browser executes ``highlightDiv`` and does exactly what Example 1 did.
 
 .. note:: 
-    Example 2 uses an anonymous (nameless) function to handle the event. Anonymous functions are common in JavaScript, but if you're coming to this tutorial from another language, this idiom might look unfamiliar. Rewritten with a named function, the code would look like this:
+    Example 2 uses a named function to handle the event. An alternative, but very convenient way to work with event handlers is to use anonymous (nameless) functions Anonymous functions are common in JavaScript, but if you're coming to this tutorial from another language, this idiom might look unfamiliar. Rewritten with a named function, the code would look like this:
 
     .. code-block:: javascript
       :linenos:
 
-      var highlightDiv = function(e) {
-        Y.one("#demo").addClass("highlight");
-      };
-
-      Y.one("document").on("click", highlightDiv);
-
-    However, it's often more convenient to just use an anonymous function for event handlers.
+	  Y.one("document").on("click", function(e) {
+	    Y.one("#demo").addClass("highlight");
+	  });
 
 Getting Lots of Nodes
 =====================
 
 The ``Y.all()`` method is similar to ``Y.one()``, except that when you give it a CSS selector,  it selects and returns multiple nodes as a `NodeList <http://developer.yahoo.com/yui/3/api/NodeList.html>`_ object. For example, calling ``Y.all("p")`` would return a ``NodeList`` containing all paragraphs in the document.
 
-Conveniently, a number of ``NodeList`` methods are similar to ``Node`` methods. For example, we've already seen ``Node.addClass()`` in action. ``NodeList.addClass()`` does almost the same thing -- it adds a class to every node in the node list.
+Conveniently, a number of ``NodeList`` methods are similar to ``Node`` methods. For example, we've already seen Node's ``addClass()`` in action. NodeList's ``addClass()`` method does almost the same thing -- it adds a class to every node in the node list.
 
 Let's take a look at how ``Y.all()`` works with CSS selectors in more detail. 
 
@@ -103,59 +99,9 @@ The ``highlight()`` function is an event handler that visually highlights the el
 
 The first line overrides the browser's default click behavior. Ordinarily, clicking on a link takes you to the link's location. Calling ``preventDefault()`` on the click event prevents this default behavior. To make what we're doing absolutely clear, the ``href`` of each link points to the home pages of some of our favorite JavaScript libraries. Thanks to ``preventDefault()``, the value of the ``href`` is irrelevant; clicking the links does not actually take us off the page. We'll see more useful event methods later on in :ref:`changing-node-properties` and again in :ref:`events`.
 
-The second line gets *all* nodes on the page and then removes the ``highlight`` class from each node, resetting the page to its initial, un-highlighted state. This line is not particularly efficient -- getting all nodes on the page is expensive, and even worse, we have to pay that cost every time we call ``highlight()``. We could be more clever about how we do this refresh, but for demo purposes, this approach is acceptable.
+The second line selects all nodes with a class of ``highlight`` on the page and then removes the ``highlight`` class from each node. This resets the page to its initial, un-highlighted state.
 
 Finally, the third line does the highlighting work. ``Y.all()`` takes the CSS selector we passed in, selects the appropriate nodes and highlights them.
-
-Adding events
--------------
-
-Now, all that's left is to attach some events to the links. Use ``Y.one()`` to grab the anchor node, use ``.on()`` to attach a click event with a ``highlight()`` handler, and... we're done, right? Something like this::
-
-  Y.one("#first").on("click", highlight(e, ".baz"));
-
-Unfortunately, this doesn't work. The problem is that we want to pass an event handler function into ``on()`` to be executed *later*, when the event triggers. But in the above code, ``highlight(e, ".baz")`` executes *now*, and so what we're really doing is::
-
-  Y.one("#first").on("click", returned-value-of-executing-highlight);
-
-Unless ``highlight()`` returns a function (which it doesn't), this will fail. The click event may fire, but we didn't give it a valid handler function to execute, so nothing will happen.
-
-There are two possible solutions:
-
-1. Pass in ``highlight()``, but wrapped in an anonymous function to defer execution:: 
-
-     Y.one("#first").on("click", function(e) {
-       highlight(e, ".baz");
-     });
-
-   The key difference is this code *declares* an anonymous function, but does not actually *execute* it. YUI now has something valid to call when the event triggers. 
-
-2. Use the extended form of the ``on()`` method. We've seen ``on()`` working with just two parameters, but the full form is::
-
-     on(type, fn, context, args*)
-   
-   where:
-
-     * ``type`` is the type of the event, such as "click".
-     * ``fn`` is the function to call to handle the event.
-     * ``context`` is the object where we are attaching the event. By default, the value of this parameter is the ``NodeList`` itself. We actually don't want to mess with this object, so we'll just explicitly set it to the special JavaScript object ``this``, which yields the same behavior. 
-     * ``args`` is one or more extra arguments to be passed into the handler function. Aha -- here is where we can supply our ``selector`` argument, or anything else extra that our handler function might need.
-
-   So for our purposes, we could call ``on()`` with four arguments::
-
-     Y.one("#first").on("click", highlight, this, ".baz");
-
-   which again, passes our ``highlight()`` function and the argument it needs on to YUI, to be executed later. 
-
-Either form will work. We'll pick option #2 because it lets us declare our events more compactly::
-
-  Y.one("#first").on("click", highlight, this, ".baz");
-  Y.one("#second").on("click", highlight, this, "li.foo");
-  Y.one("#third").on("click", highlight, this, ".foo .baz");
-  Y.one("#fourth").on("click", highlight, this, ".foo > .baz");
-  Y.one("#fifth").on("click", highlight, this, "li strong");
-
-Try clicking on the links in :download:`Example 3 <examples/dom-highlight-all.html>` while viewing the source. Does it highlight the links that you expect?
 
 .. _changing-node-properties:
 
@@ -265,4 +211,4 @@ For even more fine-grained control, we can set separate durations, delays, and e
 .. literalinclude:: examples/dom-transition.html
 	:lines: 17-35
 
-The ``height`` and ``background`` properties have their own ``duration``, ``delay``, and ``easing`` settings, which override the values set at the top.  
+The ``height`` and ``background`` properties have their own ``duration``, ``delay``, and ``easing`` settings, which override the values set at the top.

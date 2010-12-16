@@ -5,9 +5,9 @@
 </style>
 
 <p>
-  <a id="first" href="http://prototypejs.org">.baz</a> |
-  <a id="second" href="http://jquery.com">li.foo</a> |
-  <a id="third" href="http://yuilibrary.com">foo baz</a> |
+  <a id="first" href="http://yuilibrary.com">foo baz</a> |
+  <a id="second" href="http://prototypejs.org">.baz</a> |
+  <a id="third" href="http://jquery.com">li.foo</a> |
   <a id="fourth" href="http://mootools.net">foo > baz</a> |
   <a id="fifth" href="http://dojotoolkit.org">li strong</a>
 </p>
@@ -32,7 +32,7 @@
 <script>
 var highlight = function(e, selector) {
   e.preventDefault();
-  Y.all("*").removeClass("highlight");
+  Y.all(".highlight").removeClass("highlight");
   Y.all(selector).addClass("highlight");
 };
 
