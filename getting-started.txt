@@ -61,6 +61,37 @@ Here, we've assigned ``highlightDiv`` to be a click event that will trigger for 
 	    Y.one("#demo").addClass("highlight");
 	  });
 
+Getting Lots of Nodes
+=====================
+
+The ``Y.all()`` method is similar to ``Y.one()``, except that when you give it any `CSS 3 selector <http://www.w3.org/TR/css3-selectors/>`_, it selects and returns multiple nodes as a `NodeList <http://developer.yahoo.com/yui/3/api/NodeList.html>`_ object. For example:: 
+
+  Y.all("p");
+
+returns a ``NodeList`` containing all paragraphs in the document. The ``NodeList`` provides an ``each()`` method that enables you to iterate over each node in the list, applying a function::
+
+  function highlightPara(node) {
+    node.addClass("highlight");
+  };  
+
+  Y.all("p").each(highlightPara);
+
+The ``each()`` method supplies the current node as ``highlightPara``'s first argument. Thus, we can call ``addClass()`` on the node, just as we did earlier.
+
+Alternatively, we can do the same thing using an anonymous function::
+
+  Y.all("p").each(function(node) {
+    node.addClass("highlight");
+  });
+
+which is a little more compact.
+
+Conveniently, a number of ``NodeList`` methods are similar to ``Node`` methods. For example, ``NodeList``'s ``addClass()`` method does essentially the same thing as the ``Node``'s, except that it adds a class to every node in the list. This means that if we're doing something very simple like adding a class, we can make our example even *more* compact::
+
+  Y.all("p").addClass("highlight");
+
+However, if you need to apply a general function, use ``each()``.
+
 .. _changing-node-properties:
 
 Changing Node Properties

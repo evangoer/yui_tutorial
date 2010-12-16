@@ -45,12 +45,15 @@ What is 'this'?
    commentInput.on("blur", callback);
 
 
-Getting Lots of Nodes
-=====================
+A More Complicated Example 
+==========================
 
-The ``Y.all()`` method is similar to ``Y.one()``, except that when you give it a CSS selector,  it selects and returns multiple nodes as a `NodeList <http://developer.yahoo.com/yui/3/api/NodeList.html>`_ object. For example, calling ``Y.all("p")`` would return a ``NodeList`` containing all paragraphs in the document.
+.. TODO when getting lots of nodes, want to iterate
+	Also don't do event subscriptions on NodeList. It doesn't do what you expect with 'this'. 'this' should refer to the Node that the event was attached to. But: 1) we provide a delegate method, which overrides this. 2) NodeList.on("click" foo) -- inside that function 'this' is the NodeList, not the node! From inside the callback, you will always have access to the node via e.currentTarget. 'this' is the only reference to the NodeList itself. 3) Passing in a context override -- passing in 'this' is passing the global object. So pass in null instead... 
+	You can say: you can use any CSS3 selector. Go for it. 
+	Just talk about subscribe to a click event, ...
 
-Conveniently, a number of ``NodeList`` methods are similar to ``Node`` methods. For example, we've already seen Node's ``addClass()`` in action. NodeList's ``addClass()`` method does almost the same thing -- it adds a class to every node in the node list.
+.. TODO fix title and intro
 
 Let's take a look at how ``Y.all()`` works with CSS selectors in more detail. 
 
@@ -89,15 +92,6 @@ Finally, the third line does the highlighting work. ``Y.all()`` takes the CSS se
 
 Adding events
 -------------
-
-.. TODO when getting lots of nodes, want to iterate
-	Step 1, Y.all
-	Step 2, Y.each. And do an addclass
-	Step 3, NodeList mirrors the Node methods
-	Below is an advanced example. Move to the Events chapter
-	Also don't do event subscriptions on NodeList. It doesn't do what you expect with 'this'. 'this' should refer to the Node that the event was attached to. But: 1) we provide a delegate method, which overrides this. 2) NodeList.on("click" foo) -- inside that function 'this' is the NodeList, not the node! From inside the callback, you will always have access to the node via e.currentTarget. 'this' is the only reference to the NodeList itself. 3) Passing in a context override -- passing in 'this' is passing the global object. So pass in null instead... 
-	You can say: you can use any CSS3 selector. Go for it. 
-	Just talk about subscribe to a click event, ...
 
 Now, all that's left is to attach some events to the links. Use ``Y.one()`` to grab the anchor node, use ``.on()`` to attach a click event with a ``highlight()`` handler, and... we're done, right? Something like this::
 
