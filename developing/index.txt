@@ -1,0 +1,31 @@
+.. Developing with YUI documentation master file, created by
+   sphinx-quickstart on Wed Dec 15 17:26:12 2010.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to Developing with YUI's documentation!
+===============================================
+
+.. "Developing with YUI" -- how to use the same best practices we use in YUI
+	Creating your own modules
+	How to structure your app
+		- encapsulate functions into modules
+		- use() <- what do I put in there?
+		- using the loader
+		- templating
+		- reusable code (the gateway to the Gallery!)
+			inheritance: extend, augment, mix
+	YUI Test & YETI
+
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
