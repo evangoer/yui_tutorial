@@ -57,16 +57,16 @@ A More Complicated Example
 
 Let's take a look at how ``Y.all()`` works with CSS selectors in more detail. 
 
-:download:`Example 3 <examples/dom-highlight-all.html>` provides a new HTML page with some interesting structure and CSS classes to select on. The page also includes some links for us to attach events.
+:download:`Example 3 <examples/events-highlight-all.html>` provides a new HTML page with some interesting structure and CSS classes to select on. The page also includes some links for us to attach events.
 
-.. literalinclude:: examples/dom-highlight-all.html
+.. literalinclude:: examples/events-highlight-all.html
 	:language: html
 	:linenos:
 	:lines: 1-30
 
 To this page, we add some JavaScript:
 
-.. literalinclude:: examples/dom-highlight-all.html
+.. literalinclude:: examples/events-highlight-all.html
 	:linenos:
 	:lines: 33-43
 
@@ -80,7 +80,7 @@ The ``highlight()`` function is an event handler that visually highlights the el
 * ``e`` -- an object representing event that triggered. We actually saw this parameter back in :ref:`getting-a-node`. Earlier, we just ignored it, but this time, we're going to do something with it.
 * ``selector`` -- a CSS selector, such as ``"li.foo"``. This selector represents the elements we want to highlight.
 
-.. literalinclude:: examples/dom-highlight-all.html
+.. literalinclude:: examples/events-highlight-all.html
 	:linenos:
 	:lines: 33-37
 
@@ -140,7 +140,7 @@ Either form will work. We'll pick option #2 because it lets us declare our event
   Y.one("#fourth").on("click", highlight, this, ".foo > .baz");
   Y.one("#fifth").on("click", highlight, this, "li strong");
 
-Try clicking on the links in :download:`Example 3 <examples/dom-highlight-all.html>` while viewing the source. Does it highlight the links that you expect?
+Try clicking on the links in :download:`Example 3 <examples/events-highlight-all.html>` while viewing the source. Does it highlight the links that you expect?
 
 
 Removing Events
