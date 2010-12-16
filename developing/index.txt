@@ -16,6 +16,62 @@ Welcome to Developing with YUI's documentation!
 		- reusable code (the gateway to the Gallery!)
 			inheritance: extend, augment, mix
 	YUI Test & YETI
+	
+	
+.. Talk about more advanced Events stuff in this tutorial, rather than in the Getting Started one
+   
+	Event Triggering
+	================
+
+	Touch Events
+	------------
+
+	[TODO]
+
+	The importance of mobile development
+
+		- touchstart, touchmove, touchend, touchcancel
+		- watch Mark Kawakami's talk for important tidbits
+
+
+	Synthetic events
+	----------------
+
+		- events that work across touch and mouse devices
+		- event-flick, event-move
+		- Can create your own synthetic events (worth mentioning, but seems rather advanced)
+
+
+	Custom events
+	-------------
+
+		- details of how to create
+
+	Event Simulation
+	----------------
+
+	[TODO]
+
+	talk about why to do this. Testing?	
+
+	A lot of people use this to execute code. That's a bad pattern. Events are how your user interacts with your app. Simulating means you're pretending to be the user. Call the function, don't simulate the event that calls the function.
+
+	People will often hook up a click subscriber, and now I want it to execute. Don't simulate the click, call the function!
+
+	Primary use case is in testing the user interface. If the user clicks here, X should happen.
+
+	Other use case is in a synthetic event situation or feature testing. Behavioral forking -- you wire up a synth event to subscribe to an event which then it could simulate the firing of that event in a particular environment. If you're creating an interactive UI, can simulate user events for the sake of testing. Don't drive your application with simulates. 
+
+		- node.simulate("mousemove" { clientX: 200, clientY: 200})
+		- node.simulate("click", { ctrlKey: true})
+
+
+	Event-Driven Development
+	========================
+	
+	use events to listen for state changes elsewhere in your app, communicate between pieces
+	
+	
 
 Contents:
 

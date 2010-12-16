@@ -5,33 +5,19 @@ Events
 ******
 
 .. TODO new structure
-	Intro text
-	Adding Events
-		the basics
-		subscribing to ondomready, etc. 
-			these are synthetic events (link)
-	Executing Events
-		simple destroy
-		giant example with adding classes
-		bubbling, halt, stoppropagation
-		this + targets
-			more asteroids
-			add transitions in anim section
-	Removing Events
-	Custom Events
-		pick a widget -- you can do all the same things with custom events that you can do with ordinary events
+
+
 
 
 In the last chapter, :ref:`dom`, we had a few examples of events such as:
 
 .. code-block:: javascript
-   :linenos:
 
    Y.one("document").on("click", function(e) {
      Y.one("#demo").addClass("highlight");
    });
 
-But this hardly does events justice, as they are critically important in JavaScript programming. As longtime JavaScript advocate `Peter-Paul Koch puts it <http://www.quirksmode.org/js/introevents.html>`_, 
+But this hardly does events justice, as they are critically important in JavaScript programming. As longtime JavaScript advocate `Peter-Paul Koch (ppk) puts it <http://www.quirksmode.org/js/introevents.html>`_, 
 
   "**Events are the beating heart of any JavaScript application.** ... Without events there are no scripts. Take a look at any web page with JavaScript in it: in nearly all cases there will be an event that triggers the script. The reason is very simple. JavaScript is meant to add interactivity to your pages: the user does something and the page reacts."
 
@@ -62,22 +48,76 @@ In a lot of JavaScript code in the wild, you will see code that resembles::
 
 Never do this. Inline events are bad practice in JavaScript, in much the same way that inline styles are bad practice in CSS. Web pages and web applications should always separate presentation (CSS) and behavior (JavaScript) from their markup. When using YUI, always apply your events with the ``on()`` method.
 
-Here Be A Section about Event Execution
-=======================================
+Delegating Events
+-----------------
 
-this, currentTarget, bubbling, ...?
+*Event delegation* enables a single event handler on a parent element to listen for interactions on descendant elements. You can use delegation to avoid the expensive process of having to create and assign lots of individual listeners.
+
+Delegation operates almost exactly like using the ``on()`` method. You can delegate from a node object::
+
+  var node = Y.one('#demo');
+  node.delegate('click', handler);
+
+or from the YUI object::
+
+  Y.delegate('#demo').delegate('click', handler);
+
+By default, ``delgate()`` applies the handler function to all descendant elements. However, you can supply a third optional selector argument to act as a filter. For example::
+
+  Y.delegate('#demo').delegate('click', handler, 'li');
+
+attaches the ``handler()`` function to all descendants of ``#demo`` that are also list items.
 
 
-Triggering Events
-=================
+[TODO create working example, maybe with class='fragile'. Also point out that 'this' is the element where the click happened, not the parent.]::
+
+  function destroyMe(e) {
+    this.remove()
+  }
+  Y.delegate('#demo').delegate('click', destroyMe, '.fragile');
+
+[TODO use 'this' here, but point readers to the 'this + targets' section for more info.]
 
 
+Waiting for the DOM
+-------------------
+
+[TODO]
+
+goal: assist progressive enhancement, add behavior only when the element is available in the DOM
+
+Y.on("available", nodeReady, "#image"); 
+
+- available: define a function to execute as soon as element is detected in the DOM. Don't use for elements that *might* be in the document eventually, just for elements that are in the process of loading.
+
+Y.on("contentready", childrenReady, "#container");
+	
+	- contentready: same as available, except that it waits for the target element and its next sibling.
+	
+	
+Y.on("domready", domReady); 
+	
+	- define a function to execute as soon as the DOM is in a usable state = structurally complete. Inserting information into the DOM before the DOM is complete can lead to crashes. DOM is ready before images are loaded.
+
+Mention that these are all synthetic events (link)
 
 
-What is 'this'?
-===============
+Executing Events
+================
+
+Executing Events
+	simple destroy
+	giant example with adding classes
+	bubbling, halt, stoppropagation
+	this + targets
+
+Targets and 'this'
+------------------
 
 [TODO] 
+
+.. more asteroids
+   add transitions in anim section
 
 .. event programmers should be concerned with 'this'. e.target -- the most specific thing that received the event (the span inside the a)  and e.currentTarget -- where it was subscribed from (less complex)
 
@@ -99,20 +139,9 @@ Show that the 'this' in the callback is the node::
 
 .. TODO see lucassmith.name/pub/this.html
 
-Removing Events
-===============
 
-[TODO]
-
-How to remove events? Call detach. Talk about event categories
-
-   - can detach if you have the handle (either fooHandle.detach() or Y.detach(fooHandle))
-   - can detach all events of a certain category AND event type
-   - can purge all events from an element (optionally including type and recursing to children)
-
-
-Bubbling and Targets
-====================
+Bubbling and Propagation
+------------------------
 
 [TODO]
 
@@ -142,37 +171,8 @@ for fun, implement the `Asteroids bookmarklet <http://erkie.github.com/>`_ in th
   });
 
 
-Event Delegation
-================
-
-*Event delegation* enables a single event handler on a parent element to listen for interactions on descendant elements. You can use delegation to avoid the expensive process of having to create and assign lots of individual listeners.
-
-Delegation operates almost exactly like using the ``on()`` method. You can delegate from a node object::
-
-  var node = Y.one('#demo');
-  node.delegate('click', handler);
-
-or from the YUI object::
-
-  Y.delegate('#demo').delegate('click', handler);
-
-By default, ``delgate()`` applies the handler function to all descendant elements. However, you can supply a third optional selector argument to act as a filter. For example::
-
-  Y.delegate('#demo').delegate('click', handler, 'li');
-
-attaches the ``handler()`` function to all descendants of ``#demo`` that are also list items.
-
-
-[TODO create working example, maybe with class='fragile'. Also point out that 'this' is the element where the click happened, not the parent.]::
-
-  function destroyMe(e) {
-    this.remove()
-  }
-  Y.delegate('#demo').delegate('click', destroyMe, '.fragile');
-
-
 Passing Arguments to Event Handlers
-===================================
+-----------------------------------
 
 .. TODO when getting lots of nodes, want to iterate
 	Also don't do event subscriptions on NodeList. It doesn't do what you expect with 'this'. 'this' should refer to the Node that the event was attached to. But: 1) we provide a delegate method, which overrides this. 2) NodeList.on("click" foo) -- inside that function 'this' is the NodeList, not the node! From inside the callback, you will always have access to the node via e.currentTarget. 'this' is the only reference to the NodeList itself. 3) Passing in a context override -- passing in 'this' is passing the global object. So pass in null instead... 
@@ -270,72 +270,36 @@ Either form will work. We'll pick option #2 because it lets us declare our event
 Try clicking on the links in :download:`Example 3 <examples/events-highlight-all.html>` while viewing the source. Does it highlight the links that you expect?
 
 
-Events Beyond the DOM
-=====================
 
-[TODO need actual title]
+
+Removing Events
+===============
+
+[TODO]
+
+How to remove events? Call detach. Talk about event categories
+
+   - can detach if you have the handle (either fooHandle.detach() or Y.detach(fooHandle))
+   - can detach all events of a certain category AND event type
+   - can purge all events from an element (optionally including type and recursing to children)
+
+
+
+
+
+
+
+
+
+
+
+Custom Events
+=============
+
 
 [TODO intro text]
 
-Special Events
---------------
+pick a widget -- you can do all the same things with custom events that you can do with ordinary events
 
-[TODO]
 
-goal: assist progressive enhancement, add behavior only when the element is available in the DOM
 
-Y.on("available", nodeReady, "#image"); 
-
-- available: define a function to execute as soon as element is detected in the DOM. Don't use for elements that *might* be in the document eventually, just for elements that are in the process of loading.
-
-Y.on("contentready", childrenReady, "#container");
-	
-	- contentready: same as available, except that it waits for the target element and its next sibling.
-	
-	
-Y.on("domready", domReady); 
-	
-	- define a function to execute as soon as the DOM is in a usable state = structurally complete. Inserting information into the DOM before the DOM is complete can lead to crashes. DOM is ready before images are loaded.
-
-Touch Events
-------------
-
-[TODO]
-
-The importance of mobile development
-
-	- touchstart, touchmove, touchend, touchcancel
-	- watch Mark Kawakami's talk for important tidbits
-	
-	
-Synthetic events
-----------------
-
-	- events that work across touch and mouse devices
-	- event-flick, event-move
-	- Can create your own synthetic events (worth mentioning, but seems rather advanced)
-	
-	
-Custom events
--------------
-
-	- perhaps worth mentioning, probably too advanced
-
-Event Simulation
-================
-
-[TODO]
-
-talk about why to do this. Testing?	
-
-A lot of people use this to execute code. That's a bad pattern. Events are how your user interacts with your app. Simulating means you're pretending to be the user. Call the function, don't simulate the event that calls the function.
-
-People will often hook up a click subscriber, and now I want it to execute. Don't simulate the click, call the function!
-
-Primary use case is in testing the user interface. If the user clicks here, X should happen.
-
-Other use case is in a synthetic event situation or feature testing. Behavioral forking -- you wire up a synth event to subscribe to an event which then it could simulate the firing of that event in a particular environment. If you're creating an interactive UI, can simulate user events for the sake of testing. Don't drive your application with simulates. 
-
-	- node.simulate("mousemove" { clientX: 200, clientY: 200})
-	- node.simulate("click", { ctrlKey: true})
-	
