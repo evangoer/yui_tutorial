@@ -4,11 +4,6 @@
 Events
 ******
 
-.. TODO new structure
-
-
-
-
 In the last chapter, :ref:`dom`, we had a few examples of events such as:
 
 .. code-block:: javascript
@@ -51,7 +46,7 @@ Never do this. Inline events are bad practice in JavaScript, in much the same wa
 Delegating Events
 -----------------
 
-*Event delegation* enables a single event handler on a parent element to listen for interactions on descendant elements. You can use delegation to avoid the expensive process of having to create and assign lots of individual listeners.
+*Event delegation* assigns a single event handler on a parent element to listen for interactions on descendant elements. You can use delegation to avoid the expensive process of having to create and assign lots of individual listeners.
 
 Delegation operates almost exactly like using the ``on()`` method. You can delegate from a node object::
 
@@ -62,22 +57,19 @@ or from the YUI object::
 
   Y.delegate('#demo').delegate('click', handler);
 
-By default, ``delgate()`` applies the handler function to all descendant elements. However, you can supply a third optional selector argument to act as a filter. For example::
+By default, ``delgate()`` applies the handler function to all descendant elements. However, you can supply a third optional selector argument to act as a filter. For example, this code snippet attaches the ``handler()`` function to all descendants of ``#demo`` that are also list items::
 
   Y.delegate('#demo').delegate('click', handler, 'li');
 
-attaches the ``handler()`` function to all descendants of ``#demo`` that are also list items.
+In :download:`Example 2 <examples/events-delegate-highlight.html>`, we use this technique to attach a click handler to multiple elements at once. Clicking on an element highlights the element, if and only if the element has a class of ``fruit``.
 
+.. literalinclude:: examples/events-delegate-highlight.html
+	:linenos:
+	:lines: 18-21
 
-[TODO create working example, maybe with class='fragile'. Also point out that 'this' is the element where the click happened, not the parent.]::
+.. note::
 
-  function destroyMe(e) {
-    this.remove()
-  }
-  Y.delegate('#demo').delegate('click', destroyMe, '.fragile');
-
-[TODO use 'this' here, but point readers to the 'this + targets' section for more info.]
-
+   The ``highlight()`` function above is a little bit tricky -- what going on with ``this.addClass()``? In JavaScript, the ``this`` object is a special construct that is always present inside a function. In an event handler, YUI automatically sets ``this`` to be the node where the event occurred, which conveniently enables us to manipulate or capture information about the node in question. For more information about ``this`` and event targets, refer to :ref:`stay_on_target`.
 
 Waiting for the DOM
 -------------------
@@ -110,6 +102,9 @@ Executing Events
 	giant example with adding classes
 	bubbling, halt, stoppropagation
 	this + targets
+
+
+.. _stay_on_target:
 
 Targets and 'this'
 ------------------
@@ -282,14 +277,6 @@ How to remove events? Call detach. Talk about event categories
    - can detach if you have the handle (either fooHandle.detach() or Y.detach(fooHandle))
    - can detach all events of a certain category AND event type
    - can purge all events from an element (optionally including type and recursing to children)
-
-
-
-
-
-
-
-
 
 
 

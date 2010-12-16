@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<title>Delegation</title>
+<style>
+.highlight { background: #f66; color: #fff; border: 1px solid black; }
+</style>
+
+<div id="produce">
+  <p class="fruit">Apple
+  <p class="fruit">Banana
+  <p class="vegetable">Corn
+  <p class="vegetable">Radish
+  <p class="vegetable">Squash
+  <p class="fruit">Tomato
+</div>
+
+<script src="http://yui.yahooapis.com/3.2.0/build/simpleyui/simpleyui-min.js"></script>
+<script>
+function highlight(e) {
+  this.addClass('highlight');
+}
+Y.one('#produce').delegate('click', highlight, '.fruit');
+</script>
