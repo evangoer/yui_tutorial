@@ -55,11 +55,11 @@ Here, we've assigned ``highlightDiv`` to be a click event that will trigger for 
     Example 2 uses a named function to handle the event. An alternative, but very convenient way to work with event handlers is to use anonymous (nameless) functions Anonymous functions are common in JavaScript, but if you're coming to this tutorial from another language, this idiom might look unfamiliar. Rewritten with a named function, the code would look like this:
 
     .. code-block:: javascript
-      :linenos:
+       :linenos:
 
-	  Y.one("document").on("click", function(e) {
-	    Y.one("#demo").addClass("highlight");
-	  });
+       Y.one("document").on("click", function(e) {
+         Y.one("#demo").addClass("highlight");
+       });
 
 Getting Lots of Nodes
 =====================
