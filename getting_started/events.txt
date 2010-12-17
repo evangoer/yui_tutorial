@@ -46,8 +46,6 @@ Never do this. Inline events are bad practice in JavaScript, in much the same wa
 Delegating Events
 -----------------
 
-[TODO] add quick example of Y.all and each
-
 *Event delegation* assigns a single event handler on a parent element to listen for interactions on descendant elements. You can use delegation to avoid the expensive process of having to create and assign lots of individual listeners.
 
 Delegation operates almost exactly like using the ``on()`` method. You can delegate from a node object::
@@ -92,20 +90,20 @@ To help you create more responsive pages, YUI provides three *synthetic events* 
   The ``domready`` event is not assigned to a particular node. It defines a function to execute as soon as the entire DOM is in a usable state. The ``domready`` event fires before image files are loaded.
 
   .. warning:: 
-     Inserting information into the DOM before the DOM is complete can lead to crashes.
-
+     Inserting information into the DOM before the DOM is complete can lead to crashes. You can use ``domready`` to prevent this problem.
 
 Executing Events
 ================
 
-Now that we've covered how to attach events, let's take a look at a simple event in action.
+Now that we've covered how to attach events, let's take a look at a simple event in action. You might already be familiar with Erik Andersson's excellent `Asteroids bookmarklet <http://erkie.github.com/>`_, which enables you to systematically destroy a page, element by element. Using YUI, we are going to implement this amazing functionality in just *one line of code!*
 
-for fun, implement the `Asteroids bookmarklet <http://erkie.github.com/>`_ in three lines of code! (well, not really) ::
+Well, okay, three lines of code. 
 
-  Y.all("*").on("click", function(e) {
-    e.target.remove();
-  });
+And, actually, we're not even going to come close to replicating the functionality. Errr, anyway. See :download:`Example 2, "Poor Man's Asteroids" <examples/events-poor-mans-asteroids.html>`. Clicking on any element removes it from the page.
 
+.. literalinclude:: examples/events-poor-mans-asteroids.html
+	:linenos:
+	:lines: 18-20
 
 .. _stay_on_target:
 
