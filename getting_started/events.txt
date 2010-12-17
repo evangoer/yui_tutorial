@@ -69,30 +69,28 @@ In :download:`Example 2 <examples/events-delegate-highlight.html>`, we use this 
 
 .. note::
 
-   The ``highlight()`` function above is a little bit tricky -- what going on with ``this.addClass()``? In JavaScript, the ``this`` object is a special construct that is always present inside a function. In an event handler, YUI automatically sets ``this`` to be the node where the event occurred, which conveniently enables us to manipulate or capture information about the node in question. For more information about ``this`` and event targets, refer to :ref:`stay_on_target`.
+   The ``highlight()`` function above is a little bit tricky -- what going on with ``this.addClass()``? In JavaScript, the ``this`` object is a special construct that is always present inside a function. In an event handler, YUI automatically sets ``this`` to be the node where the event occurred, which conveniently enables us to manipulate or capture information about the node in questionm. For more information about ``this`` and event targets, refer to :ref:`stay_on_target`.
 
 Waiting for the DOM
 -------------------
 
-[TODO]
+When writing JavaScript apps, you want your code to initialize and start running as fast as possible. But how do you know when the DOM is ready?
 
-goal: assist progressive enhancement, add behavior only when the element is available in the DOM
+One solution is to use the common ``window.onload()`` function to start running your JavaScript. Unfortunately, this event fires after the browser has determined how to render the entire page, and even after all image files have fully loaded. This means that for complex pages or pages with large images, the user can easily start trying to interact with your page before your code is ready to run. This can lead to embarrassing situations where the user selects a menu item or tab... only to discover that nothing happens. Your site appears broken.
 
-Y.on("available", nodeReady, "#image"); 
+To help you create more responsive pages, YUI provides three *synthetic events* to support DOM loading. A synthetic event is a new event in the DOM system. You can `build your own synthetic events <http://developer.yahoo.com/yui/3/api/Event.html#method_Event.define>`_, but YUI also provides a number of useful ones out of the box, including:
 
-- available: define a function to execute as soon as element is detected in the DOM. Don't use for elements that *might* be in the document eventually, just for elements that are in the process of loading.
+``Y.on("available", handler, "#image");``
+  The ``available`` event defines a function to execute as soon as an element is detected in the DOM, but before the element's children are ready. Don't use ``available`` for elements that *might* be in the document eventually, just for elements that are in the process of loading. For example, you could use ``available`` on an ``<image>`` element to start manipulating the element's ``src`` as quickly as possible.
 
-Y.on("contentready", childrenReady, "#container");
-	
-	- contentready: same as available, except that it waits for the target element and its next sibling.
-	
-	
-Y.on("domready", domReady); 
-	
-	- define a function to execute as soon as the DOM is in a usable state = structurally complete. Inserting information into the DOM before the DOM is complete can lead to crashes. DOM is ready before images are loaded.
+``Y.on("contentready", handler, "#container");``
+  The ``contentready`` event is similar to ``available``, except that it waits for the target element and all its children to be detected in the DOM. For example, you could use ``contentready`` on a ``<ul>`` element to begin turning the unordered list and its child list elements into an interactive navigation widget.
 
-Mention that these are all synthetic events (link)
+``Y.on("domready", handler);`` 
+  The ``domready`` event is not assigned to a particular node. It defines a function to execute as soon as the entire DOM is in a usable state. The ``domready`` event fires before image files are loaded.
 
+  .. warning:: 
+     Inserting information into the DOM before the DOM is complete can lead to crashes.
 
 Executing Events
 ================
