@@ -46,6 +46,8 @@ Never do this. Inline events are bad practice in JavaScript, in much the same wa
 Delegating Events
 -----------------
 
+[TODO] add quick example of Y.all and each
+
 *Event delegation* assigns a single event handler on a parent element to listen for interactions on descendant elements. You can use delegation to avoid the expensive process of having to create and assign lots of individual listeners.
 
 Delegation operates almost exactly like using the ``on()`` method. You can delegate from a node object::
@@ -55,13 +57,13 @@ Delegation operates almost exactly like using the ``on()`` method. You can deleg
 
 or from the YUI object::
 
-  Y.delegate('#demo').delegate('click', handler);
+  Y.delegate('click', handler, '#demo');
 
 By default, ``delgate()`` applies the handler function to all descendant elements. However, you can supply a third optional selector argument to act as a filter. For example, this code snippet attaches the ``handler()`` function to all descendants of ``#demo`` that are also list items::
 
-  Y.delegate('#demo').delegate('click', handler, 'li');
+  Y.delegate('click', handler, '#demo', 'li');
 
-In :download:`Example 2 <examples/events-delegate-highlight.html>`, we use this technique to attach a click handler to multiple elements at once. Clicking on an element highlights the element, if and only if the element has a class of ``fruit``.
+In :download:`Example 1 <examples/events-delegate-highlight.html>`, we use this technique to attach a click handler to multiple elements at once. Clicking on an element highlights the element, if and only if the element has a class of ``fruit``.
 
 .. literalinclude:: examples/events-delegate-highlight.html
 	:linenos:
@@ -92,14 +94,17 @@ To help you create more responsive pages, YUI provides three *synthetic events* 
   .. warning:: 
      Inserting information into the DOM before the DOM is complete can lead to crashes.
 
+
 Executing Events
 ================
 
-Executing Events
-	simple destroy
-	giant example with adding classes
-	bubbling, halt, stoppropagation
-	this + targets
+Now that we've covered how to attach events, let's take a look at a simple event in action.
+
+for fun, implement the `Asteroids bookmarklet <http://erkie.github.com/>`_ in three lines of code! (well, not really) ::
+
+  Y.all("*").on("click", function(e) {
+    e.target.remove();
+  });
 
 
 .. _stay_on_target:
@@ -157,11 +162,7 @@ show how stopPropagation works (and show halt)
 
 show difference between e.target & e.currentTarget
 
-for fun, implement the `Asteroids bookmarklet <http://erkie.github.com/>`_ in three lines of code! (well, not really) ::
 
-  Y.all("*").on("click", function(e) {
-    e.target.remove();
-  });
 
 
 Passing Arguments to Event Handlers

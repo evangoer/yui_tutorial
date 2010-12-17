@@ -18,5 +18,5 @@
 function highlight(e) {
   this.addClass('highlight');
 }
-Y.one('#produce').delegate('click', highlight, '.fruit');
+Y.delegate('click', highlight, '#produce', '.fruit');
 </script>
