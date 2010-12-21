@@ -1,21 +1,33 @@
 <!DOCTYPE html>
-<title>Delegation</title>
+<title>Poor Man's Asteroids: Using e.target</title>
 <style>
-.highlight { background: #f66; color: #fff; border: 1px solid black; }
+div { 
+	border: 1px solid black;
+	width: 100px;
+	height: 100px; 
+	margin: 30px;
+	float: left;
+	text-align: center;
+}
+.one { background: #f66; }
+.two { background: #66f; }
+.three { background: #6f6; }
+.four { background: #6ff; }
+.five { background: #ff6; }
+.six { background: #f6f; }
+
 </style>
 
-<div id="produce">
-  <p class="fruit">Apple
-  <p class="fruit">Banana
-  <p class="vegetable">Corn
-  <p class="vegetable">Radish
-  <p class="vegetable">Squash
-  <p class="fruit">Tomato
-</div>
+<div class="one"><p>one</p></div>
+<div class="two"><p>two</p></div>
+<div class="three"><p>three</p></div>
+<div class="four"><p>four<p></div>
+<div class="five"><p>five</p></div>
+<div class="six"><p>six</p></div>
 
 <script src="http://yui.yahooapis.com/3.2.0/build/simpleyui/simpleyui-min.js"></script>
 <script>
-Y.all("*").on("click", function(e) {
+Y.all("body *").on("click", function(e) {
   e.target.remove();
 });
 </script>

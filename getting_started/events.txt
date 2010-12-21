@@ -99,11 +99,17 @@ Now that we've covered how to attach events, let's take a look at a simple event
 
 Well, okay, three lines of code. 
 
-And, actually, we're not even going to come close to replicating the functionality. Errr, anyway. See :download:`Example 2, "Poor Man's Asteroids" <examples/events-poor-mans-asteroids.html>`. Clicking on any element removes it from the page.
+And to be perfectly fair, we're not even going to come close to replicating the functionality of Asteroids. 
+
+But never mind all that! See :download:`Example 2, "Poor Man's Asteroids" <examples/events-poor-mans-asteroids.html>`. 
 
 .. literalinclude:: examples/events-poor-mans-asteroids.html
 	:linenos:
-	:lines: 18-20
+	:lines: 30-32
+
+This code sample introduces a new construct: ``e.target``. When an event triggers, YUI passes an object ``e`` that represents the event into your event handler function. This event object includes a property, ``e.target``, that represents the element where the event originally occurred. Once we have the event target, we can easily remove it or further manipulate it.
+
+In the next sections, we'll use ``e.target`` and other event properties and methods to explore how events work in detail.
 
 .. _stay_on_target:
 
@@ -111,6 +117,8 @@ Targets and 'this'
 ------------------
 
 [TODO] 
+
+When trying out the example, notice that if you click on a ``p`` within the ``div``, you remove the paragraph but not the parent div.
 
 .. more asteroids
    add transitions in anim section
