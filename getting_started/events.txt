@@ -43,6 +43,9 @@ In a lot of JavaScript code in the wild, you will see code that resembles::
 
 Never do this. Inline events are bad practice in JavaScript, in much the same way that inline styles are bad practice in CSS. Web pages and web applications should always separate presentation (CSS) and behavior (JavaScript) from their markup. When using YUI, always apply your events with the ``on()`` method.
 
+
+.. _delegating_events:
+
 Delegating Events
 -----------------
 
@@ -69,7 +72,7 @@ In :download:`Example 1 <examples/events-delegate-highlight.html>`, we use this 
 
 .. note::
 
-   The ``highlight()`` function above is a little bit tricky -- what going on with ``this.addClass()``? In JavaScript, the ``this`` object is a special construct that is always present inside a function. In an event handler, YUI automatically sets ``this`` to be the node where the event occurred, which conveniently enables us to manipulate or capture information about the node in questionm. For more information about ``this`` and event targets, refer to :ref:`stay_on_target`.
+   The ``highlight()`` function above is a little bit tricky -- what going on with ``this.addClass()``? In JavaScript, the ``this`` object is a special construct that is always present inside a function. In an event handler, YUI automatically sets ``this`` to be the node that is listening for the event, which conveniently enables us to manipulate or capture information about the node in question. For more information about ``this`` and event targets, refer to :ref:`stay_on_target`.
 
 Waiting for the DOM
 -------------------
@@ -107,7 +110,7 @@ But never mind all that! See :download:`Example 2, "Poor Man's Asteroids" <examp
 	:linenos:
 	:lines: 30-32
 
-This code sample introduces a new construct: ``e.target``. When an event triggers, YUI passes an object ``e`` that represents the event into your event handler function. This event object includes a property, ``e.target``, that represents the element where the event originally occurred. Once we have the event target, we can easily remove it or further manipulate it.
+This code sample introduces a new construct: ``e.target``. When an event triggers, YUI passes an object ``e`` that represents the event into your event handler function. This event object includes a property, ``e.target``, that represents the node where the event originally occurred. Once we have the event target, we can easily remove it or further manipulate it.
 
 In the next sections, we'll use ``e.target`` and other event properties and methods to explore how events work in detail.
 
@@ -116,7 +119,28 @@ In the next sections, we'll use ``e.target`` and other event properties and meth
 Targets and 'this'
 ------------------
 
-[TODO] 
+When writing an event handler function, you often want access to the node where the event occurred. But sometimes this question is little bit more complicated than it first appears. Consider a navigation list, where we have attached a click handler to each ``<li>``. The markup is:
+
+.. code-block:: html
+
+   <ul>
+     <li id="contact"><p><a href="/home" accesskey="c">[<b>C</b>]ontact Us</a></p></li>
+     <li> ... 
+
+If a user clicks on the bolded "C" in "Contact Us", do you care that they clicked on a ``<b>`` within an ``<a>`` within a ``<p>`` within an ``<li>``? Or do you just care that the user clicked in the ``<li>``, where the event listener was attached? 
+
+The answer of course is, "it depends." For this reason, YUI provides you with a consistent interface for accessing the node of interest. In your handler function, you have access to:
+
+* ``this`` -- the event's *context*, which by default is the node that was listening for the event. In the example markup above, ``this`` would be the ``<li>`` element. More often than not, the context node (``this``) is more useful than the specific node where the event occurred (``e.target``). 
+
+   As mentioned in :ref:`delegating_events`, the ``this`` object is a special construct that is always present inside a JavaScript function. Ordinarily YUI sets ``this`` to be the node that was listening for the event. However, you can choose to override the context when calling the event.
+
+* ``e.currentTarget`` -- the node was listening for the event. Ordinarily, you can ignore ``e.currentTarget`` and just use ``this``. However, if for some reason you decide to change the event's context, you can always fall back to using ``e.currentTarget`` if necessary.
+
+* ``e.target`` -- the most specific node where the event occurred. In the example markup above, ``e.target`` would be the ``<b>`` within the ``<a>`` within the ``<p>`` within the ``<li>`.
+
+
+
 
 When trying out the example, notice that if you click on a ``p`` within the ``div``, you remove the paragraph but not the parent div.
 
